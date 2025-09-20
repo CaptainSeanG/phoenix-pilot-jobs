@@ -2,26 +2,38 @@ name: Update Job Search
 
 on:
   schedule:
-    - cron: "0 6 * * *"  # run daily at 6AM UTC
-  workflow_dispatch:
+    - cron: "0 6 * * *"   # run daily at 6AM UTC
+  workflow_dispatch:       # allow manual runs from the Actions tab
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write       # allow pushing back to the repo
+
     steps:
       - uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.11"
-      - name: Install deps
+
+      - name: Install dependencies
         run: pip install requests
+
       - name: Run job search
+        env:
+          BING_API_KEY: ${{ secrets.BING_API_KEY }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          GOOGLE_CX_ID: ${{ secrets.GOOGLE_CX_ID }}
         run: python generate_jobs.py
+
       - name: Commit and push results
         run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
           git add index.html
-          git commit -m "Update job search results"
+          git commit -m "Update job search results" || echo "No changes to commit"
           git push
