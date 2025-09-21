@@ -23,7 +23,7 @@ def search_google(query: str):
 
 
 def build_html(results: list):
-    """Generate HTML page with cards, filters, and light/dark toggle"""
+    """Generate HTML page with grid cards, filters, and light/dark toggle"""
     updated_on = datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
 
     html = f"""
@@ -53,12 +53,16 @@ def build_html(results: list):
             h1 {{ color: #004080; }}
             .updated {{ color: #666; font-size: 0.9em; margin-bottom: 20px; }}
             .controls {{ margin-bottom: 20px; }}
+            .grid {{
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                gap: 20px;
+            }}
             .card {{
                 background: var(--card-bg);
                 border: 1px solid var(--card-border);
                 border-radius: 8px;
                 padding: 15px;
-                margin-bottom: 15px;
                 box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             }}
             .card a {{
@@ -75,6 +79,7 @@ def build_html(results: list):
                 border-radius: 5px;
                 background: var(--card-bg);
                 color: var(--text);
+                margin-left: 15px;
             }}
         </style>
     </head>
@@ -84,20 +89,20 @@ def build_html(results: list):
 
         <div class="controls">
             <strong>Filter:</strong>
-            <label><input type="checkbox" value="Caravan" onclick="filterJobs()"> Caravan</label>
-            <label><input type="checkbox" value="PC-12" onclick="filterJobs()"> PC-12</label>
-            <label><input type="checkbox" value="Navajo" onclick="filterJobs()"> Navajo</label>
-            <label><input type="checkbox" value="Comanche" onclick="filterJobs()"> Comanche</label>
+            <label><input type="checkbox" value="caravan" onclick="filterJobs()"> Caravan</label>
+            <label><input type="checkbox" value="pc-12" onclick="filterJobs()"> PC-12</label>
+            <label><input type="checkbox" value="navajo" onclick="filterJobs()"> Navajo</label>
+            <label><input type="checkbox" value="comanche" onclick="filterJobs()"> Comanche</label>
             <button class="toggle" onclick="toggleTheme()">🌙 Toggle Light/Dark</button>
         </div>
 
-        <div id="jobs">
+        <div id="jobs" class="grid">
     """
 
     for r in results:
         snippet = r.get("snippet", "")
-        # Determine which keywords are present for filtering
-        classes = " ".join([kw for kw in KEYWORDS if kw.lower() in (r['title'] + snippet).lower()])
+        # Lowercase class names for filters
+        classes = " ".join([kw.lower() for kw in KEYWORDS if kw.lower() in (r['title'] + snippet).lower()])
         html += f"""
         <div class="card {classes}">
             <a href="{r['url']}" target="_blank">{r['title']}</a>
