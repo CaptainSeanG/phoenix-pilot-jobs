@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      contents: write       # allow pushing back to the repo
+      contents: write       # allow pushing updates to the repo
 
     steps:
       - uses: actions/checkout@v3
@@ -25,7 +25,6 @@ jobs:
 
       - name: Run job search
         env:
-          BING_API_KEY: ${{ secrets.BING_API_KEY }}
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
           GOOGLE_CX_ID: ${{ secrets.GOOGLE_CX_ID }}
         run: python generate_jobs.py
