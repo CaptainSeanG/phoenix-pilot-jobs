@@ -1,31 +1,16 @@
 import requests
-import datetime
 from pathlib import Path
 import os
+from datetime import datetime
 
 # ==============================
-# API Keys from GitHub Secrets
+# API Keys from environment variables (GitHub Secrets)
 # ==============================
-BING_KEY = os.getenv("BING_API_KEY")
-BING_ENDPOINT = "https://api.bing.microsoft.com/v7.0/search"
-
 GOOGLE_KEY = os.getenv("GOOGLE_API_KEY")
 GOOGLE_CX = os.getenv("GOOGLE_CX_ID")
 
-# Keywords to search
+# Keywords
 KEYWORDS = ["Caravan", "PC-12", "Navajo", "Comanche"]
-
-# Cutoff date (30 days ago, in case APIs don’t filter perfectly)
-CUTOFF = datetime.datetime.utcnow() - datetime.timedelta(days=30)
-
-
-def search_bing(query: str):
-    """Search Bing Web API"""
-    headers = {"Ocp-Apim-Subscription-Key": BING_KEY}
-    params = {"q": query, "count": 20, "freshness": "Month"}
-    r = requests.get(BING_ENDPOINT, headers=headers, params=params)
-    r.raise_for_status()
-    return r.json()
 
 
 def search_google(query: str):
@@ -38,23 +23,27 @@ def search_google(query: str):
 
 
 def build_html(results: list):
-    """Build simple HTML page with search results"""
-    html = """
+    """Generate HTML output"""
+    updated_on = datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
+
+    html = f"""
     <html>
     <head>
         <title>Pilot Job Search</title>
         <style>
-            body { font-family: Arial, sans-serif; margin: 20px; }
-            h1 { color: #004080; }
-            ul { line-height: 1.6; }
-            li { margin-bottom: 12px; }
-            a { text-decoration: none; color: #0066cc; }
-            a:hover { text-decoration: underline; }
-            small { color: #444; }
+            body {{ font-family: Arial, sans-serif; margin: 20px; background: #f9f9f9; }}
+            h1 {{ color: #004080; }}
+            .updated {{ color: #666; font-size: 0.9em; margin-bottom: 20px; }}
+            ul {{ line-height: 1.6; }}
+            li {{ margin-bottom: 12px; }}
+            a {{ text-decoration: none; color: #0066cc; }}
+            a:hover {{ text-decoration: underline; }}
+            small {{ color: #444; }}
         </style>
     </head>
     <body>
         <h1>Pilot Jobs (Last 30 Days)</h1>
+        <div class="updated">Updated on: {updated_on}</div>
         <ul>
     """
     for r in results:
@@ -66,19 +55,6 @@ def build_html(results: list):
 
 if __name__ == "__main__":
     all_results = []
-
-    # --- Bing search ---
-    for kw in KEYWORDS:
-        try:
-            data = search_bing(f"{kw} pilot job")
-            for item in data.get("webPages", {}).get("value", []):
-                all_results.append({
-                    "title": item["name"],
-                    "url": item["url"],
-                    "snippet": item.get("snippet", "")
-                })
-        except Exception as e:
-            print(f"Bing error for {kw}: {e}")
 
     # --- Google search ---
     for kw in KEYWORDS:
@@ -101,8 +77,8 @@ if __name__ == "__main__":
             seen.add(r["url"])
             filtered.append(r)
 
-    # --- Write HTML file ---
+    # --- Write HTML ---
     html = build_html(filtered)
     Path("index.html").write_text(html, encoding="utf-8")
 
-    print(f"Generated index.html with {len(filtered)} unique results")
+    print(f"Generated index.html with {len(filtered)} unique results (Updated on {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')})")
