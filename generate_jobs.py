@@ -9,7 +9,7 @@ from datetime import datetime
 GOOGLE_KEY = os.getenv("GOOGLE_API_KEY")
 GOOGLE_CX = os.getenv("GOOGLE_CX_ID")
 
-# Keywords
+# Keywords to filter & tag results
 KEYWORDS = ["Caravan", "PC-12", "Navajo", "Comanche"]
 
 
@@ -23,7 +23,7 @@ def search_google(query: str):
 
 
 def build_html(results: list):
-    """Generate HTML output"""
+    """Generate HTML page with cards, filters, and light/dark toggle"""
     updated_on = datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
 
     html = f"""
@@ -31,25 +31,106 @@ def build_html(results: list):
     <head>
         <title>Pilot Job Search</title>
         <style>
-            body {{ font-family: Arial, sans-serif; margin: 20px; background: #f9f9f9; }}
+            body {{
+                font-family: Arial, sans-serif;
+                margin: 20px;
+                background: var(--bg);
+                color: var(--text);
+                transition: background 0.3s, color 0.3s;
+            }}
+            :root {{
+                --bg: #f9f9f9;
+                --text: #111;
+                --card-bg: #fff;
+                --card-border: #ddd;
+            }}
+            body.dark {{
+                --bg: #1e1e1e;
+                --text: #eee;
+                --card-bg: #2a2a2a;
+                --card-border: #444;
+            }}
             h1 {{ color: #004080; }}
             .updated {{ color: #666; font-size: 0.9em; margin-bottom: 20px; }}
-            ul {{ line-height: 1.6; }}
-            li {{ margin-bottom: 12px; }}
-            a {{ text-decoration: none; color: #0066cc; }}
-            a:hover {{ text-decoration: underline; }}
-            small {{ color: #444; }}
+            .controls {{ margin-bottom: 20px; }}
+            .card {{
+                background: var(--card-bg);
+                border: 1px solid var(--card-border);
+                border-radius: 8px;
+                padding: 15px;
+                margin-bottom: 15px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            }}
+            .card a {{
+                font-weight: bold;
+                font-size: 1.1em;
+                color: #0066cc;
+                text-decoration: none;
+            }}
+            .card a:hover {{ text-decoration: underline; }}
+            .toggle {{
+                cursor: pointer;
+                padding: 5px 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                background: var(--card-bg);
+                color: var(--text);
+            }}
         </style>
     </head>
     <body>
         <h1>Pilot Jobs (Last 30 Days)</h1>
-        <div class="updated">Updated on: {updated_on}</div>
-        <ul>
+        <div class="updated">Updated on: {updated_on} — Showing {len(results)} jobs</div>
+
+        <div class="controls">
+            <strong>Filter:</strong>
+            <label><input type="checkbox" value="Caravan" onclick="filterJobs()"> Caravan</label>
+            <label><input type="checkbox" value="PC-12" onclick="filterJobs()"> PC-12</label>
+            <label><input type="checkbox" value="Navajo" onclick="filterJobs()"> Navajo</label>
+            <label><input type="checkbox" value="Comanche" onclick="filterJobs()"> Comanche</label>
+            <button class="toggle" onclick="toggleTheme()">🌙 Toggle Light/Dark</button>
+        </div>
+
+        <div id="jobs">
     """
+
     for r in results:
         snippet = r.get("snippet", "")
-        html += f"<li><a href='{r['url']}' target='_blank'>{r['title']}</a><br><small>{snippet}</small></li>"
-    html += "</ul></body></html>"
+        # Determine which keywords are present for filtering
+        classes = " ".join([kw for kw in KEYWORDS if kw.lower() in (r['title'] + snippet).lower()])
+        html += f"""
+        <div class="card {classes}">
+            <a href="{r['url']}" target="_blank">{r['title']}</a>
+            <p>{snippet}</p>
+        </div>
+        """
+
+    html += """
+        </div>
+        <script>
+            function filterJobs() {
+                const checkboxes = document.querySelectorAll('input[type=checkbox]');
+                const jobs = document.querySelectorAll('.card');
+                let active = [];
+                checkboxes.forEach(cb => { if (cb.checked) active.push(cb.value.toLowerCase()); });
+
+                jobs.forEach(job => {
+                    if (active.length === 0) {
+                        job.style.display = 'block';
+                    } else {
+                        let match = active.some(a => job.classList.contains(a));
+                        job.style.display = match ? 'block' : 'none';
+                    }
+                });
+            }
+
+            function toggleTheme() {
+                document.body.classList.toggle('dark');
+            }
+        </script>
+    </body>
+    </html>
+    """
     return html
 
 
