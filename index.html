@@ -6,764 +6,676 @@
   <title>Phoenix Pilot Jobs</title>
   <style>
     :root {
-      --bg: #eef3f8;
-      --panel: #ffffff;
-      --text: #142033;
-      --muted: #667085;
-      --border: #d9e2ec;
-      --accent: #2563eb;
-      --accent-soft: #dbeafe;
-      --shadow: rgba(15, 23, 42, 0.10);
+      --bg:#eef3f8; --panel:#fff; --text:#142033; --muted:#667085;
+      --border:#d9e2ec; --accent:#2563eb; --accent-soft:#dbeafe;
+      --shadow:rgba(15,23,42,.10); --generic:#fff7ed; --generic-border:#fdba74;
     }
-
     body.dark {
-      --bg: #0f172a;
-      --panel: #172033;
-      --text: #f8fafc;
-      --muted: #aab4c5;
-      --border: #334155;
-      --accent: #60a5fa;
-      --accent-soft: #1e3a5f;
-      --shadow: rgba(0, 0, 0, 0.35);
+      --bg:#0f172a; --panel:#172033; --text:#f8fafc; --muted:#aab4c5;
+      --border:#334155; --accent:#60a5fa; --accent-soft:#1e3a5f;
+      --shadow:rgba(0,0,0,.35); --generic:#2a2117; --generic-border:#9a5a18;
     }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-    }
-
-    header {
-      padding: 28px 24px;
-      background: linear-gradient(135deg, #102a43, #2563eb);
-      color: white;
-    }
-
-    header h1 {
-      margin: 0 0 8px;
-      font-size: 2rem;
-    }
-
-    header p {
-      margin: 0;
-      color: rgba(255,255,255,0.85);
-    }
-
-    main {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 22px;
-    }
-
-    .toolbar {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 20px;
-      box-shadow: 0 8px 24px var(--shadow);
-    }
-
-    .top-row {
-      display: flex;
-      gap: 12px;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      margin-bottom: 14px;
-    }
-
-    #searchBox {
-      flex: 1;
-      min-width: 260px;
-      padding: 11px 12px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: var(--bg);
-      color: var(--text);
-      font-size: 1rem;
-    }
-
-    #themeToggle {
-      padding: 11px 14px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: var(--panel);
-      color: var(--text);
-      cursor: pointer;
-    }
-
-    .filters {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .filter-btn {
-      border: 1px solid var(--border);
-      background: var(--bg);
-      color: var(--text);
-      border-radius: 999px;
-      padding: 8px 12px;
-      cursor: pointer;
-      font-size: 0.92rem;
-    }
-
-    .filter-btn.active {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: white;
-    }
-
-    .summary {
-      color: var(--muted);
-      margin-top: 12px;
-      font-size: 0.95rem;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-    }
-
-    .job-card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 16px;
-      box-shadow: 0 8px 24px var(--shadow);
-      min-height: 230px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .card-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 10px;
-    }
-
-    .source {
-      color: var(--muted);
-      font-size: 0.82rem;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .score {
-      background: var(--accent-soft);
-      color: var(--accent);
-      border-radius: 999px;
-      padding: 4px 8px;
-      font-size: 0.78rem;
-      font-weight: bold;
-      white-space: nowrap;
-    }
-
-    .job-card h2 {
-      font-size: 1.05rem;
-      margin: 0 0 10px;
-      line-height: 1.25;
-    }
-
-    .job-card a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-
-    .job-card a:hover {
-      text-decoration: underline;
-    }
-
-    .job-card p {
-      color: var(--muted);
-      font-size: 0.92rem;
-      line-height: 1.4;
-      margin: 0 0 12px;
-      flex: 1;
-    }
-
-    .badges {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: auto;
-    }
-
-    .badge {
-      background: var(--accent-soft);
-      color: var(--accent);
-      border-radius: 999px;
-      padding: 4px 8px;
-      font-size: 0.75rem;
-      font-weight: bold;
-    }
-
-    .no-results {
-      display: none;
-      text-align: center;
-      padding: 30px;
-      color: var(--muted);
-    }
-
-    footer {
-      text-align: center;
-      color: var(--muted);
-      padding: 24px;
-      font-size: 0.85rem;
-    }
-
-    @media (max-width: 1000px) {
-      .grid { grid-template-columns: repeat(2, 1fr); }
-    }
-
-    @media (max-width: 680px) {
-      .grid { grid-template-columns: 1fr; }
-      header h1 { font-size: 1.6rem; }
-    }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:Arial,sans-serif; background:var(--bg); color:var(--text); }
+    header { padding:28px 24px; background:linear-gradient(135deg,#102a43,#2563eb); color:white; }
+    header h1 { margin:0 0 8px; font-size:2rem; }
+    header p { margin:0; color:rgba(255,255,255,.85); }
+    main { max-width:1400px; margin:0 auto; padding:22px; }
+    .toolbar { background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:16px; margin-bottom:20px; box-shadow:0 8px 24px var(--shadow); }
+    .top-row { display:flex; gap:12px; justify-content:space-between; align-items:center; flex-wrap:wrap; margin-bottom:14px; }
+    #searchBox { flex:1; min-width:260px; padding:11px 12px; border-radius:10px; border:1px solid var(--border); background:var(--bg); color:var(--text); font-size:1rem; }
+    #themeToggle { padding:11px 14px; border-radius:10px; border:1px solid var(--border); background:var(--panel); color:var(--text); cursor:pointer; }
+    .filters { display:flex; gap:8px; flex-wrap:wrap; }
+    .filter-btn { border:1px solid var(--border); background:var(--bg); color:var(--text); border-radius:999px; padding:8px 12px; cursor:pointer; font-size:.92rem; }
+    .filter-btn.active { background:var(--accent); border-color:var(--accent); color:white; }
+    .summary { color:var(--muted); margin-top:12px; font-size:.95rem; }
+    .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+    .job-card { background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:16px; box-shadow:0 8px 24px var(--shadow); min-height:230px; display:flex; flex-direction:column; }
+    .job-card.generic-card { background:var(--generic); border-color:var(--generic-border); opacity:.86; }
+    .card-top { display:flex; justify-content:space-between; gap:8px; margin-bottom:10px; }
+    .source { color:var(--muted); font-size:.82rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .score { background:var(--accent-soft); color:var(--accent); border-radius:999px; padding:4px 8px; font-size:.78rem; font-weight:bold; white-space:nowrap; }
+    .job-card h2 { font-size:1.05rem; margin:0 0 10px; line-height:1.25; }
+    .job-card a { color:var(--accent); text-decoration:none; }
+    .job-card a:hover { text-decoration:underline; }
+    .job-card p { color:var(--muted); font-size:.92rem; line-height:1.4; margin:0 0 12px; flex:1; }
+    .badges { display:flex; flex-wrap:wrap; gap:6px; margin-top:auto; }
+    .badge { background:var(--accent-soft); color:var(--accent); border-radius:999px; padding:4px 8px; font-size:.75rem; font-weight:bold; }
+    .no-results { display:none; text-align:center; padding:30px; color:var(--muted); }
+    footer { text-align:center; color:var(--muted); padding:24px; font-size:.85rem; }
+    @media(max-width:1000px) { .grid { grid-template-columns:repeat(2,1fr); } }
+    @media(max-width:680px) { .grid { grid-template-columns:1fr; } header h1 { font-size:1.6rem; } }
   </style>
 </head>
 <body>
   <header>
     <h1>Phoenix Pilot Jobs</h1>
-    <p>First turbine job hunter: Caravan, PC-12, King Air, Navajo, cargo, SIC, Part 135, and Arizona-friendly opportunities.</p>
+    <p>Ranked for first-turbine opportunities: Caravan, PC-12, King Air, cargo, SIC, Part 135, and Arizona-friendly leads.</p>
   </header>
-
   <main>
     <section class="toolbar">
       <div class="top-row">
-        <input id="searchBox" type="search" placeholder="Search visible jobs: Phoenix, cargo, SIC, PC-12..." />
+        <input id="searchBox" type="search" placeholder="Search: Phoenix, cargo, SIC, PC-12..." />
         <button id="themeToggle">🌙 Toggle Theme</button>
       </div>
-
-      <div class="filters">
-        <button class="filter-btn" data-filter="caravan">Caravan</button><button class="filter-btn" data-filter="pc-12">PC-12</button><button class="filter-btn" data-filter="king-air">King Air</button><button class="filter-btn" data-filter="navajo">Navajo</button><button class="filter-btn" data-filter="comanche">Comanche</button><button class="filter-btn" data-filter="cargo">Cargo</button><button class="filter-btn" data-filter="part-135">Part 135</button><button class="filter-btn" data-filter="sic">SIC</button><button class="filter-btn" data-filter="pic">PIC</button><button class="filter-btn" data-filter="low-time-friendly">Low-Time Friendly</button><button class="filter-btn" data-filter="arizona">Arizona</button>
-      </div>
-
-      <div class="summary">
-        Updated: 2026-05-05 02:21 UTC · <span id="visibleCount">45</span> showing of 45 ranked results
-      </div>
+      <div class="filters"><button class="filter-btn" data-filter="caravan">Caravan</button><button class="filter-btn" data-filter="pc-12">PC-12</button><button class="filter-btn" data-filter="king-air">King Air</button><button class="filter-btn" data-filter="navajo">Navajo</button><button class="filter-btn" data-filter="comanche">Comanche</button><button class="filter-btn" data-filter="cargo">Cargo</button><button class="filter-btn" data-filter="part-135">Part 135</button><button class="filter-btn" data-filter="sic">SIC</button><button class="filter-btn" data-filter="pic">PIC</button><button class="filter-btn" data-filter="low-time-friendly">Low-Time Friendly</button><button class="filter-btn" data-filter="arizona">Arizona</button><button class="filter-btn" data-filter="generic-multi-aircraft">Generic / Multi-Aircraft</button></div>
+      <div class="summary">Updated: 2026-05-05 03:25 UTC · <span id="visibleCount">58</span> showing of 58 ranked results</div>
     </section>
-
     <section id="jobsGrid" class="grid">
-      
-        <article class="job-card caravan king-air part-135 pic" data-search="pilot jobs///corporate / vip - pilot career center 2 days ago ... captain — king air 200/cessna 208 - anchorage ak pic - be200/c208 - kanc guardian flt, guardian flight guardian flight, ak ak. pilot jobs///corporate / vip ... pilotcareercenter.com caravan king air part 135 pic">
-          <div class="card-top">
-            <span class="source">pilotcareercenter.com</span>
-            <span class="score">Fit 148</span>
-          </div>
-          <h2><a href="https://pilotcareercenter.com/CORPORATE/USA/PART-91-135" target="_blank" rel="noopener noreferrer">Pilot Jobs///Corporate / VIP - PILOT CAREER CENTER</a></h2>
-          <p>2 days ago ... Captain — King Air 200/Cessna 208 - Anchorage AK PIC - BE200/C208 - KANC Guardian Flt, Guardian Flight Guardian Flight, AK AK. Pilot Jobs///Corporate / VIP ...</p>
-          <div class="badges"><span class="badge">Caravan</span><span class="badge">King Air</span><span class="badge">Part 135</span><span class="badge">PIC</span></div>
-        </article>
-        
-        <article class="job-card pc-12 sic pic" data-search="ventura airconnect ltd.&#x27;s post - linkedin apr 14, 2026 ... we&#x27;re hiring | pilot in command (pic) &amp; first officers (fo) ventura ... cesar augusto cardoso. pilatus pc-12 ng / captain. 17h. report this comment linkedin.com pc-12 sic pic">
+        <article class="job-card  pc-12 part-135 sic pic" data-search="manext hiring g650 pic in addison, tx | linkedin apr 17, 2026 ... ... pilot position for its part 135 on-demand aircraft charter and management operation. ... pilot in command - pilatus pc-12. planesmart! aviation, llc. addison ... pc-12 part 135 sic pic">
           <div class="card-top">
             <span class="source">linkedin.com</span>
-            <span class="score">Fit 143</span>
+            <span class="score">Fit 212</span>
           </div>
-          <h2><a href="https://www.linkedin.com/posts/ventura-airconnect-ltd_hiring-pilots-aviationjobs-activity-7449809766308302849-jXUi" target="_blank" rel="noopener noreferrer">Ventura Airconnect Ltd.&#x27;s Post - LinkedIn</a></h2>
-          <p>Apr 14, 2026 ... We&#x27;re Hiring | Pilot in Command (PIC) &amp; First Officers (FO) Ventura ... Cesar Augusto Cardoso. PILATUS PC-12 NG / Captain. 17h. Report this comment</p>
-          <div class="badges"><span class="badge">PC-12</span><span class="badge">SIC</span><span class="badge">PIC</span></div>
-        </article>
-        
-        <article class="job-card caravan king-air sic" data-search="pilot career center - usa - pilot jobs and more 2 days ago ... ... sic - king air - vbw dynamic av, dynamic aviation dynamic aviation, va va. chief pilot — c208 caravan amphib - miami chief pilot - c208 amphib - miami ... pilotcareercenter.com caravan king air sic">
-          <div class="card-top">
-            <span class="source">pilotcareercenter.com</span>
-            <span class="score">Fit 138</span>
-          </div>
-          <h2><a href="https://pilotcareercenter.com/" target="_blank" rel="noopener noreferrer">PILOT CAREER CENTER - USA - Pilot Jobs and more</a></h2>
-          <p>2 days ago ... ... SIC - King Air - VBW Dynamic Av, Dynamic Aviation Dynamic Aviation, VA VA. Chief Pilot — C208 Caravan Amphib - Miami Chief Pilot - C208 Amphib - Miami ...</p>
-          <div class="badges"><span class="badge">Caravan</span><span class="badge">King Air</span><span class="badge">SIC</span></div>
-        </article>
-        
-        <article class="job-card pc-12 part-135 sic pic" data-search="pilatus pc-12/47e 14 cfr 135 captain boise, id - linkedin 7 days ago ... pilatus pc-12/47e 14 cfr 135 captain boise, id. western aircraft boise, id. 3 ... pilot (first officer) - west region. netjets. boise, id 4 days ago. linkedin.com pc-12 part 135 sic pic">
-          <div class="card-top">
-            <span class="source">linkedin.com</span>
-            <span class="score">Fit 138</span>
-          </div>
-          <h2><a href="https://www.linkedin.com/jobs/view/pilatus-pc-12-47e-14-cfr-135-captain-boise-id-at-western-aircraft-4407573866" target="_blank" rel="noopener noreferrer">Pilatus PC-12/47E 14 CFR 135 Captain Boise, ID - LinkedIn</a></h2>
-          <p>7 days ago ... Pilatus PC-12/47E 14 CFR 135 Captain Boise, ID. Western Aircraft Boise, ID. 3 ... Pilot (First Officer) - West Region. NetJets. Boise, ID 4 days ago.</p>
+          <h2><a href="https://www.linkedin.com/jobs/view/g650-pic-at-manext-4392897905" target="_blank" rel="noopener noreferrer">MAnext hiring G650 PIC in Addison, TX | LinkedIn</a></h2>
+          <p>Apr 17, 2026 ... ... pilot position for its Part 135 on-demand aircraft charter and management operation. ... Pilot in Command - Pilatus PC-12. PlaneSmart! Aviation, LLC. Addison ...</p>
           <div class="badges"><span class="badge">PC-12</span><span class="badge">Part 135</span><span class="badge">SIC</span><span class="badge">PIC</span></div>
         </article>
         
-        <article class="job-card caravan part-135 pic" data-search="delta air lines expects 20% earnings growth in 2026 - linkedin apr 18, 2026 ... professional pilot with 3,000+ flight hours and 2,800 pic, including extensive cessna 208 caravan experience. ... captain | kc-135 evaluator pilot, state director ... linkedin.com caravan part 135 pic">
+        <article class="job-card  pc-12 part-135 sic pic" data-search="tim gonzalez&#x27;s post - linkedin apr 6, 2026 ... part 91k/135 pc-12 pic/ instructor pilot/ pc-24 sic. 3w. report this comment ... former chief pilot under part 135. 3w. report this comment; close menu. pc-12 part 135 sic pic">
           <div class="card-top">
             <span class="source">linkedin.com</span>
-            <span class="score">Fit 135</span>
-          </div>
-          <h2><a href="https://www.linkedin.com/posts/ernie-meeks-940b5362_deltaairlines-pilothiring-airlinecareers-activity-7451342190548807680-SeNh" target="_blank" rel="noopener noreferrer">Delta Air Lines Expects 20% Earnings Growth in 2026 - LinkedIn</a></h2>
-          <p>Apr 18, 2026 ... Professional pilot with 3,000+ flight hours and 2,800 PIC, including extensive Cessna 208 Caravan experience. ... Captain | KC-135 Evaluator Pilot, State Director ...</p>
-          <div class="badges"><span class="badge">Caravan</span><span class="badge">Part 135</span><span class="badge">PIC</span></div>
-        </article>
-        
-        <article class="job-card pc-12 part-135 pic" data-search="aviation jobs, pilot jobs, aviation employment, aviation job fairs ... 8 days ago ... part 135 piaggio avanti line pilot - oklahoma · (members only). apr 26, 2026 ... pilatus pc-12 captain ($90k - $100k) - utah · (members only). apr 25, 2026 ... ppb.climbto350.com pc-12 part 135 pic">
-          <div class="card-top">
-            <span class="source">ppb.climbto350.com</span>
-            <span class="score">Fit 128</span>
-          </div>
-          <h2><a href="https://ppb.climbto350.com/climbto350_aviation_jobs_board.cfm?start=97&amp;page=3" target="_blank" rel="noopener noreferrer">Aviation Jobs, Pilot Jobs, Aviation Employment, Aviation Job Fairs ...</a></h2>
-          <p>8 days ago ... Part 135 Piaggio Avanti Line Pilot - Oklahoma · (Members Only). Apr 26, 2026 ... Pilatus PC-12 Captain ($90k - $100k) - Utah · (Members Only). Apr 25, 2026 ...</p>
-          <div class="badges"><span class="badge">PC-12</span><span class="badge">Part 135</span><span class="badge">PIC</span></div>
-        </article>
-        
-        <article class="job-card pc-12 part-135 sic pic" data-search="tim gonzalez&#x27;s post - linkedin apr 6, 2026 ... part 91k/135 pc-12 pic/ instructor pilot/ pc-24 sic. 3w. report this comment ... former chief pilot under part 135. 3w. report this comment; close menu. linkedin.com pc-12 part 135 sic pic">
-          <div class="card-top">
-            <span class="source">linkedin.com</span>
-            <span class="score">Fit 123</span>
+            <span class="score">Fit 201</span>
           </div>
           <h2><a href="https://www.linkedin.com/posts/tim-gonzalez-317525145_checkride-passed-blessed-and-grateful-for-activity-7446916740804038656-Yf4X" target="_blank" rel="noopener noreferrer">Tim Gonzalez&#x27;s Post - LinkedIn</a></h2>
           <p>Apr 6, 2026 ... Part 91k/135 PC-12 PIC/ Instructor Pilot/ PC-24 SIC. 3w. Report this comment ... Former Chief Pilot under Part 135. 3w. Report this comment; Close menu.</p>
           <div class="badges"><span class="badge">PC-12</span><span class="badge">Part 135</span><span class="badge">SIC</span><span class="badge">PIC</span></div>
         </article>
         
-        <article class="job-card king-air sic pic" data-search="pilot-fixed wing job at aero air - king air pic - dutch harbor, ak apr 24, 2026 ... pilot - king air pic - dutch harbor, ak jobs in hillsboro for aero air. view additional job detail and apply directly to aero air. jsfirm.com king air sic pic">
-          <div class="card-top">
-            <span class="source">jsfirm.com</span>
-            <span class="score">Fit 119</span>
-          </div>
-          <h2><a href="https://www.jsfirm.com/Pilot-Fixed+Wing/Pilot+-+King+Air+PIC+-+Dutch+Harbor,+AK/Unalaska-Alaska/jobID_1927257" target="_blank" rel="noopener noreferrer">Pilot-Fixed Wing job at Aero Air - King Air PIC - Dutch Harbor, AK</a></h2>
-          <p>Apr 24, 2026 ... Pilot - King Air PIC - Dutch Harbor, AK jobs in Hillsboro for Aero Air. View additional job detail and apply directly to Aero Air.</p>
-          <div class="badges"><span class="badge">King Air</span><span class="badge">SIC</span><span class="badge">PIC</span></div>
-        </article>
-        
-        <article class="job-card pc-12 part-135" data-search="atlas air ambulance hiring pc-12 pilot in jacksonville, fl | linkedin 7 days ago ... pc-12 pilot. atlas air ambulance jacksonville, fl. 1 month ago be among ... act as pilot-in-command on all assigned flights under part 135 operating rules. linkedin.com pc-12 part 135">
+        <article class="job-card  king-air part-135 sic" data-search="james onieal&#x27;s post - linkedin apr 21, 2026 ... ... pilot career development &amp; hiring strategy expert. 4d. report this post ... matt burtz. 1500tt+ | king air 90 sic-part 135 | avid networking enthusiast ... king air part 135 sic">
           <div class="card-top">
             <span class="source">linkedin.com</span>
-            <span class="score">Fit 117</span>
+            <span class="score">Fit 199</span>
+          </div>
+          <h2><a href="https://www.linkedin.com/posts/jamesonieal_tuesday-night-hotel-room-in-a-city-you-activity-7452384147739873281-tn8V" target="_blank" rel="noopener noreferrer">James Onieal&#x27;s Post - LinkedIn</a></h2>
+          <p>Apr 21, 2026 ... ... Pilot Career Development &amp; Hiring Strategy Expert. 4d. Report this post ... Matt Burtz. 1500TT+ | King Air 90 SIC-Part 135 | Avid Networking Enthusiast ...</p>
+          <div class="badges"><span class="badge">King Air</span><span class="badge">Part 135</span><span class="badge">SIC</span></div>
+        </article>
+        
+        <article class="job-card  pc-12 part-135 sic pic" data-search="netjets hiring pilot (first officer) - west region in idaho, united states 4 days ago ... pilatus pc-12/47e 14 cfr 135 captain boise, id. western aircraft. boise, id 4 ... captain jobs · certified flight instructor jobs · flight officer jobs · the ... pc-12 part 135 sic pic">
+          <div class="card-top">
+            <span class="source">linkedin.com</span>
+            <span class="score">Fit 196</span>
+          </div>
+          <h2><a href="https://www.linkedin.com/jobs/view/pilot-first-officer-west-region-at-netjets-4406787379" target="_blank" rel="noopener noreferrer">NetJets hiring Pilot (First Officer) - West Region in Idaho, United States</a></h2>
+          <p>4 days ago ... Pilatus PC-12/47E 14 CFR 135 Captain Boise, ID. Western Aircraft. Boise, ID 4 ... Captain jobs · Certified Flight Instructor jobs · Flight Officer jobs · The ...</p>
+          <div class="badges"><span class="badge">PC-12</span><span class="badge">Part 135</span><span class="badge">SIC</span><span class="badge">PIC</span></div>
+        </article>
+        
+        <article class="job-card  caravan part-135 sic" data-search="darryl nicholson jr&#x27;s post - linkedin apr 25, 2026 ... ... grand caravan ... darryl nicholson jr&#x27;s post. view profile for darryl nicholson jr. darryl nicholson jr. first officer (trainee) at breeze airways | part 135 ... caravan part 135 sic">
+          <div class="card-top">
+            <span class="source">linkedin.com</span>
+            <span class="score">Fit 181</span>
+          </div>
+          <h2><a href="https://www.linkedin.com/posts/djnicholson208_breezeairways-pilottraining-a220-activity-7453897581681610752-tnSv" target="_blank" rel="noopener noreferrer">Darryl Nicholson Jr&#x27;s Post - LinkedIn</a></h2>
+          <p>Apr 25, 2026 ... ... Grand Caravan ... Darryl Nicholson Jr&#x27;s Post. View profile for Darryl Nicholson Jr. Darryl Nicholson Jr. First Officer (Trainee) at Breeze Airways | Part 135 ...</p>
+          <div class="badges"><span class="badge">Caravan</span><span class="badge">Part 135</span><span class="badge">SIC</span></div>
+        </article>
+        
+        <article class="job-card  pc-12 sic pic" data-search="pilot oconus jobs, employment | indeed 12 hours ago ... pc-12 captain &amp; ce-525 first officer. easily apply. skyshare. ogden, ut 84405. $120,000 a year. contract. weekends as needed +1. travel reimbursement. health ... pc-12 sic pic">
+          <div class="card-top">
+            <span class="source">indeed.com</span>
+            <span class="score">Fit 176</span>
+          </div>
+          <h2><a href="https://www.indeed.com/q-pilot-oconus-jobs.html?jt=contract" target="_blank" rel="noopener noreferrer">Pilot Oconus Jobs, Employment | Indeed</a></h2>
+          <p>12 hours ago ... PC-12 Captain &amp; CE-525 First Officer. Easily apply. SKYSHARE. Ogden, UT 84405. $120,000 a year. Contract. Weekends as needed +1. Travel reimbursement. Health ...</p>
+          <div class="badges"><span class="badge">PC-12</span><span class="badge">SIC</span><span class="badge">PIC</span></div>
+        </article>
+        
+        <article class="job-card  caravan cargo sic" data-search="private pilot license jobs jobs in ontario - indeed 2 days ago ... first officer · air transat. mississauga, on l5p 1b2 ; fire detection pilot (c208) · mag aerospace canada. dryden, on ; first officer · cargojet airways ltd. caravan cargo sic">
+          <div class="card-top">
+            <span class="source">ca.indeed.com</span>
+            <span class="score">Fit 173</span>
+          </div>
+          <h2><a href="https://ca.indeed.com/q-private-pilot-license-jobs-l-ontario-jobs.html" target="_blank" rel="noopener noreferrer">Private Pilot License Jobs jobs in Ontario - Indeed</a></h2>
+          <p>2 days ago ... First Officer · Air Transat. Mississauga, ON L5P 1B2 ; Fire Detection Pilot (C208) · MAG Aerospace Canada. Dryden, ON ; First Officer · Cargojet Airways Ltd.</p>
+          <div class="badges"><span class="badge">Caravan</span><span class="badge">Cargo</span><span class="badge">SIC</span></div>
+        </article>
+        
+        <article class="job-card  king-air part-135 arizona" data-search="part time flight instructor jobs - indeed 4 days ago ... far part 135 experience and 3,000+ total flight hours preferred. conduct ... on-call king air 90/200 instructor pilot. cae inc. phoenix, az. part-time. on ... king air part 135 arizona">
+          <div class="card-top">
+            <span class="source">indeed.com</span>
+            <span class="score">Fit 173</span>
+          </div>
+          <h2><a href="https://www.indeed.com/q-part-time-flight-instructor-jobs.html" target="_blank" rel="noopener noreferrer">Part Time Flight Instructor jobs - Indeed</a></h2>
+          <p>4 days ago ... FAR Part 135 experience and 3,000+ total flight hours preferred. Conduct ... On-Call King Air 90/200 Instructor Pilot. CAE Inc. Phoenix, AZ. Part-time. On ...</p>
+          <div class="badges"><span class="badge">King Air</span><span class="badge">Part 135</span><span class="badge">Arizona</span></div>
+        </article>
+        
+        <article class="job-card  pc-12 part-135 sic pic" data-search="pilatus pc-12/47e 14 cfr 135 captain boise, id - linkedin 7 days ago ... pilatus pc-12/47e 14 cfr 135 captain boise, id in mountain view, ca. expand ... pilot (first officer) - west region. netjets. boise, id 4 days ago. pc-12 part 135 sic pic">
+          <div class="card-top">
+            <span class="source">linkedin.com</span>
+            <span class="score">Fit 168</span>
+          </div>
+          <h2><a href="https://www.linkedin.com/jobs/view/pilatus-pc-12-47e-14-cfr-135-captain-boise-id-at-western-aircraft-4407573866" target="_blank" rel="noopener noreferrer">Pilatus PC-12/47E 14 CFR 135 Captain Boise, ID - LinkedIn</a></h2>
+          <p>7 days ago ... Pilatus PC-12/47E 14 CFR 135 Captain Boise, ID in Mountain View, CA. Expand ... Pilot (First Officer) - West Region. NetJets. Boise, ID 4 days ago.</p>
+          <div class="badges"><span class="badge">PC-12</span><span class="badge">Part 135</span><span class="badge">SIC</span><span class="badge">PIC</span></div>
+        </article>
+        
+        <article class="job-card  pc-12 part-135" data-search="atlas air ambulance hiring pc-12 pilot in jacksonville, fl | linkedin 7 days ago ... pc-12 pilot. atlas air ambulance jacksonville, fl. 1 month ago be among ... act as pilot-in-command on all assigned flights under part 135 operating rules. pc-12 part 135">
+          <div class="card-top">
+            <span class="source">linkedin.com</span>
+            <span class="score">Fit 164</span>
           </div>
           <h2><a href="https://www.linkedin.com/jobs/view/pc-12-pilot-at-atlas-air-ambulance-4392987203" target="_blank" rel="noopener noreferrer">Atlas Air Ambulance hiring PC-12 Pilot in Jacksonville, FL | LinkedIn</a></h2>
           <p>7 days ago ... PC-12 Pilot. Atlas Air Ambulance Jacksonville, FL. 1 month ago Be among ... Act as Pilot-in-Command on all assigned flights under Part 135 operating rules.</p>
           <div class="badges"><span class="badge">PC-12</span><span class="badge">Part 135</span></div>
         </article>
         
-        <article class="job-card pc-12 king-air navajo" data-search="shane wise - endorsed in pc-24, pc-12, b200, ac50 ... - linkedin 7 days ago ... senior pilot. sunshine coast skydivers (caloundra). jun 2008 - dec 2009 1 year 7 months. caloundra. senior jump pilot pa-31 navajo u206. it manager. bmt wbm ... au.linkedin.com pc-12 king air navajo">
+        <article class="job-card  pc-12 pic" data-search="jet linx hiring pic - challenger 300/350 in dallas, tx | linkedin 7 days ago ... pilot in command - pilatus pc-12. planesmart! aviation, llc. dallas, tx 1 ... captain jobs. 13,427 open jobs · director labor relations jobs. 2,867 open jobs. pc-12 pic">
           <div class="card-top">
-            <span class="source">au.linkedin.com</span>
-            <span class="score">Fit 117</span>
+            <span class="source">linkedin.com</span>
+            <span class="score">Fit 164</span>
           </div>
-          <h2><a href="https://au.linkedin.com/in/shane-wise-10534a103" target="_blank" rel="noopener noreferrer">Shane Wise - Endorsed in PC-24, PC-12, B200, AC50 ... - LinkedIn</a></h2>
-          <p>7 days ago ... Senior Pilot. Sunshine Coast Skydivers (Caloundra). Jun 2008 - Dec 2009 1 year 7 months. Caloundra. Senior Jump Pilot PA-31 Navajo U206. IT Manager. BMT WBM ...</p>
-          <div class="badges"><span class="badge">PC-12</span><span class="badge">King Air</span><span class="badge">Navajo</span></div>
-        </article>
-        
-        <article class="job-card pc-12 king-air arizona" data-search="opensky - pilot career center apr 10, 2026 ... 1 be350 - beech king air 350 turboprop. aircraft orders, pc24 - pilatus pc24 ... phoenix · pittsburgh · portland · san diego · san fran · seattle · st. louis. pilotcareercenter.com pc-12 king air arizona">
-          <div class="card-top">
-            <span class="source">pilotcareercenter.com</span>
-            <span class="score">Fit 114</span>
-          </div>
-          <h2><a href="https://pilotcareercenter.com/Air-Carrier-PCC-Profile/5457/OpenSky" target="_blank" rel="noopener noreferrer">OpenSky - PILOT CAREER CENTER</a></h2>
-          <p>Apr 10, 2026 ... 1 BE350 - Beech King Air 350 Turboprop. Aircraft Orders, PC24 - Pilatus PC24 ... PHOENIX · PITTSBURGH · PORTLAND · SAN DIEGO · SAN FRAN · SEATTLE · ST. LOUIS.</p>
-          <div class="badges"><span class="badge">PC-12</span><span class="badge">King Air</span><span class="badge">Arizona</span></div>
-        </article>
-        
-        <article class="job-card caravan sic pic" data-search="federal airlines - pilot career center apr 16, 2026 ... direct entry captains - cessna 208 dec capt - c208. &gt; first officers ... pilot job openings - federal airlinespilot job openings - federal airlines. &gt;. pilotcareercenter.com caravan sic pic">
-          <div class="card-top">
-            <span class="source">pilotcareercenter.com</span>
-            <span class="score">Fit 112</span>
-          </div>
-          <h2><a href="https://pilotcareercenter.com/Air-Carrier-PCC-Profile/1125/Federal-Airlines" target="_blank" rel="noopener noreferrer">Federal Airlines - PILOT CAREER CENTER</a></h2>
-          <p>Apr 16, 2026 ... Direct Entry Captains - Cessna 208 DEC CAPT - C208. &gt; First Officers ... Pilot Job Openings - Federal AirlinesPilot Job Openings - Federal Airlines. &gt;.</p>
-          <div class="badges"><span class="badge">Caravan</span><span class="badge">SIC</span><span class="badge">PIC</span></div>
-        </article>
-        
-        <article class="job-card pc-12 sic pic" data-search="pc-12 captain &amp; ce-525 first officer - ogden, ut 84405 - indeed.com apr 7, 2026 ... pc-12 captain &amp; ce-525 first officer. skyshare. ·. 4.5. job details. $120,000 a ... about the role: skyshare is seeking a passionate and skilled pilot to join our ... indeed.com pc-12 sic pic">
-          <div class="card-top">
-            <span class="source">indeed.com</span>
-            <span class="score">Fit 112</span>
-          </div>
-          <h2><a href="https://www.indeed.com/viewjob?jk=d89b752c77281217" target="_blank" rel="noopener noreferrer">PC-12 Captain &amp; CE-525 First Officer - Ogden, UT 84405 - Indeed.com</a></h2>
-          <p>Apr 7, 2026 ... PC-12 Captain &amp; CE-525 First Officer. SKYSHARE. ·. 4.5. Job details. $120,000 a ... About the Role: SkyShare is seeking a passionate and skilled pilot to join our ...</p>
-          <div class="badges"><span class="badge">PC-12</span><span class="badge">SIC</span><span class="badge">PIC</span></div>
-        </article>
-        
-        <article class="job-card navajo sic pic" data-search="pilot / pa31 captain - kasi aviation, part of hexagon - linkedin apr 16, 2026 ... as our operations expand, we are looking for aerial work direct entry piper navajo captains to join our dynamic and exciting team for the upcoming 2024 season. ca.linkedin.com navajo sic pic">
-          <div class="card-top">
-            <span class="source">ca.linkedin.com</span>
-            <span class="score">Fit 112</span>
-          </div>
-          <h2><a href="https://ca.linkedin.com/jobs/view/pilot-pa31-captain-at-kasi-aviation-part-of-hexagon-4400458481" target="_blank" rel="noopener noreferrer">Pilot / PA31 Captain - KASI Aviation, part of Hexagon - LinkedIn</a></h2>
-          <p>Apr 16, 2026 ... As our operations expand, we are looking for aerial work direct entry Piper Navajo Captains to join our dynamic and exciting team for the upcoming 2024 season.</p>
-          <div class="badges"><span class="badge">Navajo</span><span class="badge">SIC</span><span class="badge">PIC</span></div>
-        </article>
-        
-        <article class="job-card king-air pic arizona" data-search="triton airways - pilot career center apr 25, 2026 ... ... king air 200/350 - lex. &gt; captains - citation excel - lex 15/13 pic - ce560xl ... phoenix · pittsburgh · portland · san diego · san fran · seattle · st. louis. pilotcareercenter.com king air pic arizona">
-          <div class="card-top">
-            <span class="source">pilotcareercenter.com</span>
-            <span class="score">Fit 112</span>
-          </div>
-          <h2><a href="https://pilotcareercenter.com/Air-Carrier-PCC-Profile/5043/Triton-Airways" target="_blank" rel="noopener noreferrer">Triton Airways - PILOT CAREER CENTER</a></h2>
-          <p>Apr 25, 2026 ... ... King Air 200/350 - LEX. &gt; Captains - Citation Excel - LEX 15/13 PIC - CE560XL ... PHOENIX · PITTSBURGH · PORTLAND · SAN DIEGO · SAN FRAN · SEATTLE · ST. LOUIS.</p>
-          <div class="badges"><span class="badge">King Air</span><span class="badge">PIC</span><span class="badge">Arizona</span></div>
-        </article>
-        
-        <article class="job-card pc-12 pic" data-search="pilot oconus jobs, employment | indeed 11 hours ago ... pc-12 captain. easily apply. skyshare. ogden, ut 84405. $90,000 - $100,000 a year. contract. weekends as needed +1. travel reimbursement. health insurance. 401( ... indeed.com pc-12 pic">
-          <div class="card-top">
-            <span class="source">indeed.com</span>
-            <span class="score">Fit 109</span>
-          </div>
-          <h2><a href="https://www.indeed.com/q-pilot-oconus-jobs.html?jt=contract" target="_blank" rel="noopener noreferrer">Pilot Oconus Jobs, Employment | Indeed</a></h2>
-          <p>11 hours ago ... PC-12 Captain. Easily apply. SkyShare. Ogden, UT 84405. $90,000 - $100,000 a year. Contract. Weekends as needed +1. Travel reimbursement. Health insurance. 401( ...</p>
+          <h2><a href="https://www.linkedin.com/jobs/view/pic-challenger-300-350-at-jet-linx-4407545111" target="_blank" rel="noopener noreferrer">Jet Linx hiring PIC - Challenger 300/350 in Dallas, TX | LinkedIn</a></h2>
+          <p>7 days ago ... Pilot in Command - Pilatus PC-12. PlaneSmart! Aviation, LLC. Dallas, TX 1 ... Captain jobs. 13,427 open jobs · Director Labor Relations jobs. 2,867 open jobs.</p>
           <div class="badges"><span class="badge">PC-12</span><span class="badge">PIC</span></div>
         </article>
         
-        <article class="job-card king-air low-time-friendly" data-search="brian childs&#x27; post - linkedin 6 days ago ... ... king air! find this job and other low time pilot opportunities on my blog: https://lnkd.in/gpbp2ynh about the role &amp; company: &quot;the airborne data acquisition ... linkedin.com king air low-time friendly">
+        <article class="job-card  pc-12 part-135 sic pic" data-search="pc-12 captain &amp; ce-525 first officer - ogden, ut 84405 - indeed.com apr 7, 2026 ... pc-12 captain &amp; ce-525 first officer ... valid u.s. passport and driver&#x27;s license; current ifr knowledge and experience; prior part 135 experience preferred ... pc-12 part 135 sic pic">
+          <div class="card-top">
+            <span class="source">indeed.com</span>
+            <span class="score">Fit 163</span>
+          </div>
+          <h2><a href="https://www.indeed.com/viewjob?jk=d89b752c77281217" target="_blank" rel="noopener noreferrer">PC-12 Captain &amp; CE-525 First Officer - Ogden, UT 84405 - Indeed.com</a></h2>
+          <p>Apr 7, 2026 ... PC-12 Captain &amp; CE-525 First Officer ... Valid U.S. passport and driver&#x27;s license; Current IFR knowledge and experience; Prior Part 135 experience preferred ...</p>
+          <div class="badges"><span class="badge">PC-12</span><span class="badge">Part 135</span><span class="badge">SIC</span><span class="badge">PIC</span></div>
+        </article>
+        
+        <article class="job-card  pc-12 sic" data-search="netjets hiring pilot (first officer) - east region in white plains, ny 4 days ago ... pilot ft - pc-12 first officer. tradewind aviation. harrison, ny 9 months ago ... flight officer jobs · the alaska club jobs · aviation safety inspector jobs ... pc-12 sic">
           <div class="card-top">
             <span class="source">linkedin.com</span>
-            <span class="score">Fit 109</span>
+            <span class="score">Fit 156</span>
           </div>
-          <h2><a href="https://www.linkedin.com/posts/seattlepilot_low-time-pilots-dynamic-aviation-is-hiring-activity-7455031918946979840-OFR8" target="_blank" rel="noopener noreferrer">Brian Childs&#x27; Post - LinkedIn</a></h2>
-          <p>6 days ago ... ... King Air! Find this job and other low time pilot opportunities on my blog: https://lnkd.in/gpbP2yNh About the role &amp; company: &quot;The Airborne Data Acquisition ...</p>
-          <div class="badges"><span class="badge">King Air</span><span class="badge">Low-Time Friendly</span></div>
+          <h2><a href="https://www.linkedin.com/jobs/view/pilot-first-officer-east-region-at-netjets-4406775635" target="_blank" rel="noopener noreferrer">NetJets hiring Pilot (First Officer) - East Region in White Plains, NY</a></h2>
+          <p>4 days ago ... Pilot FT - PC-12 First Officer. Tradewind Aviation. Harrison, NY 9 months ago ... Flight Officer jobs · The Alaska Club jobs · Aviation Safety Inspector jobs ...</p>
+          <div class="badges"><span class="badge">PC-12</span><span class="badge">SIC</span></div>
         </article>
         
-        <article class="job-card king-air pic arizona" data-search="canada - pilot jobs and more - pilot career center 7 days ago ... pilot jobs///canada. captains — king air 200/250 - alberta capt - king air ... phoenix · pittsburgh · portland · san diego · san fran · seattle · st. louis. pilotcareercenter.com king air pic arizona">
-          <div class="card-top">
-            <span class="source">pilotcareercenter.com</span>
-            <span class="score">Fit 104</span>
-          </div>
-          <h2><a href="https://pilotcareercenter.com/CANADA" target="_blank" rel="noopener noreferrer">CANADA - Pilot Jobs and more - PILOT CAREER CENTER</a></h2>
-          <p>7 days ago ... Pilot Jobs///Canada. Captains — King Air 200/250 - Alberta CAPT - King Air ... PHOENIX · PITTSBURGH · PORTLAND · SAN DIEGO · SAN FRAN · SEATTLE · ST. LOUIS.</p>
-          <div class="badges"><span class="badge">King Air</span><span class="badge">PIC</span><span class="badge">Arizona</span></div>
-        </article>
-        
-        <article class="job-card caravan cargo low-time-friendly" data-search="brian childs&#x27; post - linkedin apr 15, 2026 ... ... caravan &amp; c408 sky courier) and are currently flying approximately 100 ... &quot; find this job and more at the low time pilot blog: https://lnkd.in ... linkedin.com caravan cargo low-time friendly">
+        <article class="job-card  pc-12 sic" data-search="eberl claims service hiring drone pilot - gig opportunity in new ... 3 days ago ... pilot ft - pc-12 first officer. tradewind aviation. harrison, ny 9 months ago ... loan officer assistant jobs · j.m. huber corporation jobs · senior attorney ... pc-12 sic">
           <div class="card-top">
             <span class="source">linkedin.com</span>
-            <span class="score">Fit 104</span>
+            <span class="score">Fit 156</span>
           </div>
-          <h2><a href="https://www.linkedin.com/posts/seattlepilot_low-time-pilots-mountain-air-cargo-inc-activity-7450243878424682496-fGjE" target="_blank" rel="noopener noreferrer">Brian Childs&#x27; Post - LinkedIn</a></h2>
-          <p>Apr 15, 2026 ... ... Caravan &amp; C408 Sky Courier) and are currently flying approximately 100 ... &quot; Find this job and more at the Low Time Pilot blog: https://lnkd.in ...</p>
-          <div class="badges"><span class="badge">Caravan</span><span class="badge">Cargo</span><span class="badge">Low-Time Friendly</span></div>
+          <h2><a href="https://www.linkedin.com/jobs/view/drone-pilot-gig-opportunity-at-eberl-claims-service-4370457624" target="_blank" rel="noopener noreferrer">Eberl Claims Service hiring Drone Pilot - Gig Opportunity in New ...</a></h2>
+          <p>3 days ago ... Pilot FT - PC-12 First Officer. Tradewind Aviation. Harrison, NY 9 months ago ... Loan Officer Assistant jobs · J.M. Huber Corporation jobs · Senior Attorney ...</p>
+          <div class="badges"><span class="badge">PC-12</span><span class="badge">SIC</span></div>
         </article>
         
-        <article class="job-card caravan pic" data-search="tropic air - pilot career center apr 25, 2026 ... 15 c208b - grand caravan turboprops (g1000 efis), 2 c182t - cessna skylane ... post new pilot job new pilot job post jobs · terms and conditions · privacy ... pilotcareercenter.com caravan pic">
+        <article class="job-card  navajo cargo sic" data-search="biel moliné garriga - commercial meifr group 1 pilot ... - linkedin apr 15, 2026 ... ... cargo pilot / charter pilot / air ambulance / ifr / multi-crew ... first officer - pa-31-350. skycare air ambulance &amp; charters. jan 2026 ... navajo cargo sic">
           <div class="card-top">
-            <span class="source">pilotcareercenter.com</span>
-            <span class="score">Fit 102</span>
+            <span class="source">ca.linkedin.com</span>
+            <span class="score">Fit 156</span>
           </div>
-          <h2><a href="https://pilotcareercenter.com/Air-Carrier-PCC-Profile/1053/Tropic-Air" target="_blank" rel="noopener noreferrer">Tropic Air - PILOT CAREER CENTER</a></h2>
-          <p>Apr 25, 2026 ... 15 C208B - Grand Caravan Turboprops (G1000 EFIS), 2 C182T - Cessna Skylane ... Post New Pilot Job New Pilot Job Post Jobs · Terms and Conditions · Privacy ...</p>
-          <div class="badges"><span class="badge">Caravan</span><span class="badge">PIC</span></div>
+          <h2><a href="https://ca.linkedin.com/in/bielmgarriga" target="_blank" rel="noopener noreferrer">Biel Moliné Garriga - Commercial MEIFR Group 1 Pilot ... - LinkedIn</a></h2>
+          <p>Apr 15, 2026 ... ... Cargo Pilot / Charter Pilot / Air Ambulance / IFR / Multi-Crew ... First Officer - PA-31-350. SkyCare Air Ambulance &amp; Charters. Jan 2026 ...</p>
+          <div class="badges"><span class="badge">Navajo</span><span class="badge">Cargo</span><span class="badge">SIC</span></div>
         </article>
         
-        <article class="job-card king-air pic" data-search="europe-uk - pilot jobs and more - pilot career center 19 hours ago ... non rated captain — king air 200 - cwl bhx ntr capt - king air 200 - cwl bhx dragonfly exec, dragonfly executive air charter dragonfly executive air charter ... pilotcareercenter.com king air pic">
+        <article class="job-card  caravan sic pic" data-search="cauê ferrari‏ - ‏captain a320 type rated / first officer a380 ... - linkedin apr 6, 2026 ... c208 co-pilot. two taxi aereo. ‏يوليو ٢٠١٠‏ - ‏مارس ٢٠١١‏ ‏9‏ ‏شهر‏. são paulo e região, brasil. 295h as cessna caravan c208 first officer. رسم بياني ‏cavok ... caravan sic pic">
           <div class="card-top">
-            <span class="source">pilotcareercenter.com</span>
-            <span class="score">Fit 102</span>
+            <span class="source">ae.linkedin.com</span>
+            <span class="score">Fit 148</span>
           </div>
-          <h2><a href="https://pilotcareercenter.com/EUROPE-UK" target="_blank" rel="noopener noreferrer">EUROPE-UK - Pilot Jobs and more - PILOT CAREER CENTER</a></h2>
-          <p>19 hours ago ... Non Rated Captain — King Air 200 - CWL BHX NTR CAPT - King Air 200 - CWL BHX DragonFly Exec, DragonFly Executive Air Charter DragonFly Executive Air Charter ...</p>
-          <div class="badges"><span class="badge">King Air</span><span class="badge">PIC</span></div>
+          <h2><a href="https://ae.linkedin.com/in/cau%C3%AA-ferrari-283b62178" target="_blank" rel="noopener noreferrer">Cauê Ferrari‏ - ‏Captain A320 type rated / First Officer A380 ... - LinkedIn</a></h2>
+          <p>Apr 6, 2026 ... C208 Co-Pilot. Two Taxi Aereo. ‏يوليو ٢٠١٠‏ - ‏مارس ٢٠١١‏ ‏9‏ ‏شهر‏. São Paulo e Região, Brasil. 295H as Cessna Caravan C208 first officer. رسم بياني ‏Cavok ...</p>
+          <div class="badges"><span class="badge">Caravan</span><span class="badge">SIC</span><span class="badge">PIC</span></div>
         </article>
         
-        <article class="job-card pc-12 sic" data-search="ralyn w.&#x27;s post - linkedin apr 19, 2026 ... brian childs. first officer, airbus a320. 2d. report this comment; close menu ... ken vancura. corporate pilot | pilatus pc-12 ng | 1800+ tt | csel, cmel, ifr. linkedin.com pc-12 sic">
+        <article class="job-card  king-air part-135 pic" data-search="pilot-fixed wing job at aero air - king air pic - dutch harbor, ak apr 24, 2026 ... ... king air pilot in command to work at our dutch harbor, ak location! ... ensure that all flight operations activities are in full compliance with far part 135 and ... king air part 135 pic">
+          <div class="card-top">
+            <span class="source">jsfirm.com</span>
+            <span class="score">Fit 146</span>
+          </div>
+          <h2><a href="https://www.jsfirm.com/Pilot-Fixed+Wing/Pilot+-+King+Air+PIC+-+Dutch+Harbor,+AK/Unalaska-Alaska/jobID_1927257" target="_blank" rel="noopener noreferrer">Pilot-Fixed Wing job at Aero Air - King Air PIC - Dutch Harbor, AK</a></h2>
+          <p>Apr 24, 2026 ... ... King Air Pilot in Command to work at our Dutch Harbor, AK location! ... Ensure that all flight operations activities are in full compliance with FAR Part 135 and ...</p>
+          <div class="badges"><span class="badge">King Air</span><span class="badge">Part 135</span><span class="badge">PIC</span></div>
+        </article>
+        
+        <article class="job-card  pc-12 part-135" data-search="arnav pareek&#x27;s post - linkedin apr 11, 2026 ... strong post and from a part 135 pilatus pc-12 operator perspective, i&#x27;d take ... part 135, especially single-pilot turbine, there&#x27;s nowhere to hide. pc-12 part 135">
           <div class="card-top">
             <span class="source">linkedin.com</span>
-            <span class="score">Fit 102</span>
+            <span class="score">Fit 136</span>
+          </div>
+          <h2><a href="https://www.linkedin.com/posts/arnav-pareek-pilot_aviation-pilotcareer-flighttraining-activity-7448809688709644290-Dv3G" target="_blank" rel="noopener noreferrer">Arnav Pareek&#x27;s Post - LinkedIn</a></h2>
+          <p>Apr 11, 2026 ... Strong post and from a Part 135 Pilatus PC-12 operator perspective, I&#x27;d take ... Part 135, especially single-pilot turbine, there&#x27;s nowhere to hide.</p>
+          <div class="badges"><span class="badge">PC-12</span><span class="badge">Part 135</span></div>
+        </article>
+        
+        <article class="job-card  pc-12 part-135" data-search="crewblast® | linkedin 18 hours ago ... the business of flying the pc-12, contract pilot rates, demand &amp; career ... close menu. part 91 vs part 135 crew requirements: what operators must know ... pc-12 part 135">
+          <div class="card-top">
+            <span class="source">linkedin.com</span>
+            <span class="score">Fit 136</span>
+          </div>
+          <h2><a href="https://www.linkedin.com/company/crewblast" target="_blank" rel="noopener noreferrer">CrewBlast® | LinkedIn</a></h2>
+          <p>18 hours ago ... The Business of Flying the PC-12, Contract Pilot Rates, Demand &amp; Career ... Close menu. Part 91 vs Part 135 Crew Requirements: What Operators Must Know ...</p>
+          <div class="badges"><span class="badge">PC-12</span><span class="badge">Part 135</span></div>
+        </article>
+        
+        <article class="job-card  caravan arizona" data-search="pilot career fairs &amp; roadshows - usa 4 days ago ... phoenix · pittsburgh · portland · san diego · san fran · seattle · st. louis · tampa · wash ... caravan · challenger · citation · dash 8 · de havilland dhc6 · e- ... caravan arizona">
+          <div class="card-top">
+            <span class="source">pilotcareercenter.com</span>
+            <span class="score">Fit 130</span>
+          </div>
+          <h2><a href="https://pilotcareercenter.com/PILOT-RECRUITMENT-ROADSHOWS-CONFERENCES-EXPOS/USA" target="_blank" rel="noopener noreferrer">Pilot Career Fairs &amp; Roadshows - USA</a></h2>
+          <p>4 days ago ... PHOENIX · PITTSBURGH · PORTLAND · SAN DIEGO · SAN FRAN · SEATTLE · ST. LOUIS · TAMPA · WASH ... Caravan · Challenger · Citation · Dash 8 · de Havilland DHC6 · E- ...</p>
+          <div class="badges"><span class="badge">Caravan</span><span class="badge">Arizona</span></div>
+        </article>
+        
+        <article class="job-card  caravan cargo" data-search="autoflight completes first 2-ton-class evtol tea delivery in china apr 17, 2026 ... 1w. report this post; close menu. bristow group enters autonomous cargo race with evtol pilot ... cessna caravan from albuquerque international sunport to ... caravan cargo">
+          <div class="card-top">
+            <span class="source">linkedin.com</span>
+            <span class="score">Fit 128</span>
+          </div>
+          <h2><a href="https://www.linkedin.com/posts/hk-business-wire_autoflight-completes-first-2-ton-class-evtol-activity-7450820417843363840-i9zP" target="_blank" rel="noopener noreferrer">AutoFlight Completes First 2-Ton-Class eVTOL Tea Delivery in China</a></h2>
+          <p>Apr 17, 2026 ... 1w. Report this post; Close menu. Bristow Group Enters Autonomous Cargo Race with eVTOL Pilot ... Cessna Caravan from Albuquerque International Sunport to ...</p>
+          <div class="badges"><span class="badge">Caravan</span><span class="badge">Cargo</span></div>
+        </article>
+        
+        <article class="job-card  pc-12 sic" data-search="ralyn w.&#x27;s post - linkedin apr 19, 2026 ... brian childs. first officer, airbus a320. 2d. report this comment; close menu ... ken vancura. corporate pilot | pilatus pc-12 ng | 1800+ tt | csel, cmel, ifr. pc-12 sic">
+          <div class="card-top">
+            <span class="source">linkedin.com</span>
+            <span class="score">Fit 128</span>
           </div>
           <h2><a href="https://www.linkedin.com/posts/ralynwheeler_aviation-pilotjobs-aviationcareers-activity-7451657118438584320-lFYN" target="_blank" rel="noopener noreferrer">Ralyn W.&#x27;s Post - LinkedIn</a></h2>
           <p>Apr 19, 2026 ... Brian Childs. First Officer, Airbus A320. 2d. Report this comment; Close menu ... Ken Vancura. Corporate Pilot | Pilatus PC-12 NG | 1800+ TT | CSEL, CMEL, IFR.</p>
           <div class="badges"><span class="badge">PC-12</span><span class="badge">SIC</span></div>
         </article>
         
-        <article class="job-card pc-12 sic pic" data-search="megan pepi&#x27;s post - linkedin apr 13, 2026 ... megan pepi&#x27;s post. view profile for megan pepi. megan pepi. accountant-turned-commercial pilot | captain - pilatus pc-12 ... captain at tradewind aviation! i ... linkedin.com pc-12 sic pic">
+        <article class="job-card  caravan" data-search="pilot vehicle driver jobs in ontario - indeed 3 days ago ... pilot vehicle driver jobs in ontario. fire detection pilot (c208). easily apply. mag aerospace canada. dryden, on. contract. position title: fire detection ... caravan">
+          <div class="card-top">
+            <span class="source">ca.indeed.com</span>
+            <span class="score">Fit 119</span>
+          </div>
+          <h2><a href="https://ca.indeed.com/q-pilot-vehicle-driver-l-ontario-jobs.html?start=10" target="_blank" rel="noopener noreferrer">Pilot vehicle driver jobs in Ontario - Indeed</a></h2>
+          <p>3 days ago ... Pilot vehicle driver jobs in Ontario. Fire Detection Pilot (C208). Easily apply. MAG Aerospace Canada. Dryden, ON. Contract. Position Title: Fire Detection ...</p>
+          <div class="badges"><span class="badge">Caravan</span></div>
+        </article>
+        
+        <article class="job-card  pc-12 sic" data-search="julianne botz&#x27;s post - linkedin apr 14, 2026 ... julianne botz&#x27;s post. view profile for julianne botz. julianne botz. pc-12 first officer ... congrats, when did you apply for this job ? as i have applied ... pc-12 sic">
           <div class="card-top">
             <span class="source">linkedin.com</span>
-            <span class="score">Fit 97</span>
+            <span class="score">Fit 118</span>
           </div>
-          <h2><a href="https://www.linkedin.com/posts/megan-pepi-pilot_i-am-excited-to-share-that-i-have-been-upgraded-activity-7449546986816434176-aN0P" target="_blank" rel="noopener noreferrer">Megan Pepi&#x27;s Post - LinkedIn</a></h2>
-          <p>Apr 13, 2026 ... Megan Pepi&#x27;s Post. View profile for Megan Pepi. Megan Pepi. Accountant-turned-Commercial Pilot | Captain - Pilatus PC-12 ... Captain at Tradewind Aviation! I ...</p>
-          <div class="badges"><span class="badge">PC-12</span><span class="badge">SIC</span><span class="badge">PIC</span></div>
-        </article>
-        
-        <article class="job-card pc-12 sic pic" data-search="pilatus pc-12 (captain &amp; first officer) •… | federal airlines pty ltd apr 15, 2026 ... ... (captain &amp; first officer) • pilatus pc-12 (captain &amp; first officer) • beechcraft 1900 (captain &amp; first officer) fedair invites experienced pilots to join our ... linkedin.com pc-12 sic pic">
-          <div class="card-top">
-            <span class="source">linkedin.com</span>
-            <span class="score">Fit 97</span>
-          </div>
-          <h2><a href="https://www.linkedin.com/posts/federal-airlines_%F0%9D%97%99%F0%9D%97%BF%F0%9D%97%B2%F0%9D%97%B2%F0%9D%97%B9%F0%9D%97%AE%F0%9D%97%BB%F0%9D%97%B0%F0%9D%97%B2-%F0%9D%97%A2%F0%9D%97%BD%F0%9D%97%BD%F0%9D%97%BC%F0%9D%97%BF%F0%9D%98%81%F0%9D%98%82%F0%9D%97%BB%F0%9D%97%B6%F0%9D%98%81%F0%9D%97%B6-activity-7450187136370159618-qgkm" target="_blank" rel="noopener noreferrer">Pilatus PC-12 (Captain &amp; First Officer) •… | federal Airlines Pty Ltd</a></h2>
-          <p>Apr 15, 2026 ... ... (Captain &amp; First Officer) • Pilatus PC-12 (Captain &amp; First Officer) • Beechcraft 1900 (Captain &amp; First Officer) FedAir invites experienced pilots to join our ...</p>
-          <div class="badges"><span class="badge">PC-12</span><span class="badge">SIC</span><span class="badge">PIC</span></div>
-        </article>
-        
-        <article class="job-card king-air sic" data-search="voyageur aviation - pilot career center apr 12, 2026 ... ... king air 200 are operated out of moncton, nb for air ambulance services ... post new pilot job new pilot job post jobs · terms and conditions · privacy ... pilotcareercenter.com king air sic">
-          <div class="card-top">
-            <span class="source">pilotcareercenter.com</span>
-            <span class="score">Fit 94</span>
-          </div>
-          <h2><a href="https://pilotcareercenter.com/Air-Carrier-PCC-Profile/79/Voyageur-Aviation" target="_blank" rel="noopener noreferrer">Voyageur Aviation - PILOT CAREER CENTER</a></h2>
-          <p>Apr 12, 2026 ... ... King Air 200 are operated out of Moncton, NB for Air Ambulance services ... Post New Pilot Job New Pilot Job Post Jobs · Terms and Conditions · Privacy ...</p>
-          <div class="badges"><span class="badge">King Air</span><span class="badge">SIC</span></div>
-        </article>
-        
-        <article class="job-card navajo arizona" data-search="airborne sensing corp - pilot career center 6 days ago ... asc has been operating since 1981 and now utilizes a fleet of aztec and navajo aircraft. ... post new pilot job new pilot job post jobs · terms and conditions. pilotcareercenter.com navajo arizona">
-          <div class="card-top">
-            <span class="source">pilotcareercenter.com</span>
-            <span class="score">Fit 94</span>
-          </div>
-          <h2><a href="https://pilotcareercenter.com/Air-Carrier-PCC-Profile/2778/Airborne-Sensing-Corp" target="_blank" rel="noopener noreferrer">Airborne Sensing Corp - PILOT CAREER CENTER</a></h2>
-          <p>6 days ago ... ASC has been operating since 1981 and now utilizes a fleet of Aztec and Navajo aircraft. ... Post New Pilot Job New Pilot Job Post Jobs · Terms and Conditions.</p>
-          <div class="badges"><span class="badge">Navajo</span><span class="badge">Arizona</span></div>
-        </article>
-        
-        <article class="job-card pc-12 sic arizona" data-search="zuzana kleckova&#x27;s post - linkedin 8 days ago ... commercial pilot. 20h. report this post; close menu. non-type rated first officer on pilatus pc-12 thank you very much for this amazing experience, alpha ... linkedin.com pc-12 sic arizona">
-          <div class="card-top">
-            <span class="source">linkedin.com</span>
-            <span class="score">Fit 89</span>
-          </div>
-          <h2><a href="https://www.linkedin.com/posts/zuzana-kleckova-938b00145_non-type-rated-first-officer-on-pilatus-pc-activity-7454521375526051840-0AZR" target="_blank" rel="noopener noreferrer">Zuzana Kleckova&#x27;s Post - LinkedIn</a></h2>
-          <p>8 days ago ... Commercial pilot. 20h. Report this post; Close menu. Non-Type Rated First Officer on Pilatus PC-12 Thank you very much for this amazing experience, Alpha ...</p>
-          <div class="badges"><span class="badge">PC-12</span><span class="badge">SIC</span><span class="badge">Arizona</span></div>
-        </article>
-        
-        <article class="job-card caravan arizona" data-search="hudson santiago da silva - commercial pilot ifr | +550h tt apr 15, 2026 ... commercial pilot ifr | +550h tt | +300h c208b caravan | multi-engine | aviation maintenance supervisor – u.s. army | available in brazil starting july 2026 ... linkedin.com caravan arizona">
-          <div class="card-top">
-            <span class="source">linkedin.com</span>
-            <span class="score">Fit 87</span>
-          </div>
-          <h2><a href="https://www.linkedin.com/in/hudson-santiago-da-silva-911bba175" target="_blank" rel="noopener noreferrer">Hudson Santiago da Silva - Commercial Pilot IFR | +550h TT</a></h2>
-          <p>Apr 15, 2026 ... Commercial Pilot IFR | +550h TT | +300h C208B Caravan | Multi-Engine | Aviation Maintenance Supervisor – U.S. Army | Available in Brazil starting July 2026 ...</p>
-          <div class="badges"><span class="badge">Caravan</span><span class="badge">Arizona</span></div>
-        </article>
-        
-        <article class="job-card caravan pic" data-search="federal aviation administration&#x27;s post - linkedin apr 9, 2026 ... professional pilot with 3,000+ flight hours and 2,800 pic, including extensive cessna 208 caravan experience. safety-driven, calm under pressure, and ... linkedin.com caravan pic">
-          <div class="card-top">
-            <span class="source">linkedin.com</span>
-            <span class="score">Fit 87</span>
-          </div>
-          <h2><a href="https://www.linkedin.com/posts/faa_the-faa-is-seeking-input-on-updates-to-part-activity-7448036377071517697-zR8C" target="_blank" rel="noopener noreferrer">Federal Aviation Administration&#x27;s Post - LinkedIn</a></h2>
-          <p>Apr 9, 2026 ... Professional pilot with 3,000+ flight hours and 2,800 PIC, including extensive Cessna 208 Caravan experience. Safety-driven, calm under pressure, and ...</p>
-          <div class="badges"><span class="badge">Caravan</span><span class="badge">PIC</span></div>
-        </article>
-        
-        <article class="job-card pc-12 sic" data-search="nicolas d&#x27;osten-sacken&#x27;s post - linkedin apr 23, 2026 ... i am very pleased to share that i have recently joined hans jet as a first officer on the pilatus pc-12. this marks an important milestone for me, ... linkedin.com pc-12 sic">
-          <div class="card-top">
-            <span class="source">linkedin.com</span>
-            <span class="score">Fit 87</span>
-          </div>
-          <h2><a href="https://www.linkedin.com/posts/nicolas-d-osten-sacken_aviation-pilot-firstofficer-activity-7453048659283353600-n3EV" target="_blank" rel="noopener noreferrer">Nicolas d&#x27;OSTEN-SACKEN&#x27;s Post - LinkedIn</a></h2>
-          <p>Apr 23, 2026 ... I am very pleased to share that I have recently joined Hans Jet as a First Officer on the Pilatus PC-12. This marks an important milestone for me, ...</p>
+          <h2><a href="https://www.linkedin.com/posts/juliannebotz_excited-to-share-ive-started-as-a-first-activity-7449959826949980161-cFCP" target="_blank" rel="noopener noreferrer">Julianne Botz&#x27;s Post - LinkedIn</a></h2>
+          <p>Apr 14, 2026 ... Julianne Botz&#x27;s Post. View profile for Julianne Botz. Julianne Botz. PC-12 First Officer ... Congrats, when did you apply for this job ? As I have applied ...</p>
           <div class="badges"><span class="badge">PC-12</span><span class="badge">SIC</span></div>
         </article>
         
-        <article class="job-card caravan" data-search="sacramento air charter - pilot career center apr 25, 2026 ... post new pilot job new pilot job post jobs · terms and conditions ... caravan · challenger · citation · dash 8 · de havilland dhc6 · e-jets · falcon jets · glex. pilotcareercenter.com caravan">
-          <div class="card-top">
-            <span class="source">pilotcareercenter.com</span>
-            <span class="score">Fit 84</span>
-          </div>
-          <h2><a href="https://pilotcareercenter.com/Air-Carrier-PCC-Profile/4899/Sacramento-Air-Charter" target="_blank" rel="noopener noreferrer">Sacramento Air Charter - PILOT CAREER CENTER</a></h2>
-          <p>Apr 25, 2026 ... Post New Pilot Job New Pilot Job Post Jobs · Terms and Conditions ... Caravan · Challenger · Citation · Dash 8 · de Havilland DHC6 · E-Jets · Falcon Jets · Glex.</p>
-          <div class="badges"><span class="badge">Caravan</span></div>
-        </article>
-        
-        <article class="job-card comanche" data-search="ace pilot academy&#x27;s post - linkedin apr 8, 2026 ... ... comanche. stop flying in the dark. invest in training that delivers results ... job at an airline! using real world weather/notam&#x27;s/aircraft ... linkedin.com comanche">
+        <article class="job-card  caravan pic" data-search="wisk pursues autonomy from start | wisk posted on the topic apr 8, 2026 ... in traditional aviation, safety often resides in the gap between what the system does and what the pilot infers under pressure. ... cessna caravan from ... caravan pic">
           <div class="card-top">
             <span class="source">linkedin.com</span>
-            <span class="score">Fit 84</span>
+            <span class="score">Fit 103</span>
           </div>
-          <h2><a href="https://www.linkedin.com/posts/ace-pilot-academy_pilottraining-checkrideready-aviationexcellence-activity-7447677396205412352-E3ki" target="_blank" rel="noopener noreferrer">Ace Pilot Academy&#x27;s Post - LinkedIn</a></h2>
-          <p>Apr 8, 2026 ... ... Comanche. Stop flying in the dark. Invest in training that delivers RESULTS ... job at an airline! Using real world weather/NOTAM&#x27;s/aircraft ...</p>
-          <div class="badges"><span class="badge">Comanche</span></div>
-        </article>
-        
-        <article class="job-card comanche sic pic" data-search="text | jabu petto posted on the topic - linkedin apr 13, 2026 ... mechatronics engineer rov senior pilot technician imca certified l millennium l magnum l triton xlx l sub atlantic comanche l innovator l merlin wr 200 l ... linkedin.com comanche sic pic">
-          <div class="card-top">
-            <span class="source">linkedin.com</span>
-            <span class="score">Fit 81</span>
-          </div>
-          <h2><a href="https://www.linkedin.com/posts/jabu-petto-9337651b_i-received-this-request-for-rov-techssupervisors-activity-7449355696237740032-cTkC" target="_blank" rel="noopener noreferrer">text | Jabu Petto posted on the topic - LinkedIn</a></h2>
-          <p>Apr 13, 2026 ... Mechatronics Engineer ROV SENIOR PILOT TECHNICIAN IMCA certified l Millennium l Magnum l Triton XLX l Sub Atlantic Comanche l Innovator l Merlin WR 200 l ...</p>
-          <div class="badges"><span class="badge">Comanche</span><span class="badge">SIC</span><span class="badge">PIC</span></div>
-        </article>
-        
-        <article class="job-card caravan pic" data-search="bradley obusek&#x27;s post - linkedin apr 9, 2026 ... professional pilot with 3,000+ flight hours and 2,800 pic, including extensive cessna 208 caravan experience. safety-driven, calm under pressure, and ... linkedin.com caravan pic">
-          <div class="card-top">
-            <span class="source">linkedin.com</span>
-            <span class="score">Fit 79</span>
-          </div>
-          <h2><a href="https://www.linkedin.com/posts/bradley-obusek-a09288206_excited-to-see-the-revisions-coming-to-part-activity-7448177021911891968-6EE4" target="_blank" rel="noopener noreferrer">Bradley Obusek&#x27;s Post - LinkedIn</a></h2>
-          <p>Apr 9, 2026 ... Professional pilot with 3,000+ flight hours and 2,800 PIC, including extensive Cessna 208 Caravan experience. Safety-driven, calm under pressure, and ...</p>
+          <h2><a href="https://www.linkedin.com/posts/wisk-aero_wiskaero-autonomy-aviation-activity-7447677815702945792-14yv" target="_blank" rel="noopener noreferrer">Wisk Pursues Autonomy from Start | Wisk posted on the topic</a></h2>
+          <p>Apr 8, 2026 ... In traditional aviation, safety often resides in the gap between what the system does and what the pilot infers under pressure. ... Cessna Caravan from ...</p>
           <div class="badges"><span class="badge">Caravan</span><span class="badge">PIC</span></div>
         </article>
         
-        <article class="job-card caravan pic" data-search="delta #airline #travel #fly #airport - kenneth card&#x27;s post - linkedin apr 19, 2026 ... professional pilot with 3,000+ flight hours and 2,800 pic, including extensive cessna 208 caravan experience. safety-driven, calm under pressure, and ... linkedin.com caravan pic">
+        <article class="job-card  caravan sic" data-search="kunal chhatwani&#x27;s post - linkedin apr 9, 2026 ... naval aviator | founder, the pilot&#x27;s compass — india&#x27;s aviation career ... cessna caravan can transform udan outcomes as india unlocks new airstrips ... caravan sic">
           <div class="card-top">
             <span class="source">linkedin.com</span>
-            <span class="score">Fit 79</span>
+            <span class="score">Fit 95</span>
           </div>
-          <h2><a href="https://www.linkedin.com/posts/kennyonline_delta-airline-travel-activity-7451764037673078784-3NRN" target="_blank" rel="noopener noreferrer">delta #airline #travel #fly #airport - Kenneth Card&#x27;s Post - LinkedIn</a></h2>
-          <p>Apr 19, 2026 ... Professional pilot with 3,000+ flight hours and 2,800 PIC, including extensive Cessna 208 Caravan experience. Safety-driven, calm under pressure, and ...</p>
-          <div class="badges"><span class="badge">Caravan</span><span class="badge">PIC</span></div>
+          <h2><a href="https://www.linkedin.com/posts/kunal-chhatwani-b9594936_indiabuilt-infrastructureindia-indiagrowthstory-activity-7448239846927597568-lDfm" target="_blank" rel="noopener noreferrer">Kunal Chhatwani&#x27;s Post - LinkedIn</a></h2>
+          <p>Apr 9, 2026 ... Naval Aviator | Founder, The Pilot&#x27;s Compass — India&#x27;s Aviation Career ... Cessna Caravan Can Transform UDAN Outcomes As India unlocks new airstrips ...</p>
+          <div class="badges"><span class="badge">Caravan</span><span class="badge">SIC</span></div>
         </article>
         
-        <article class="job-card caravan" data-search="skydive key west - pilot career center apr 11, 2026 ... post new pilot job new pilot job post jobs · terms and conditions ... caravan · challenger · citation · dash 8 · de havilland dhc6 · e-jets · falcon jets · glex. pilotcareercenter.com caravan">
+        <article class="job-card  caravan" data-search="dalitso ngoma - line pilot at als ltd (c208 / dash8) | linkedin apr 26, 2026 ... freelance pilot. aeronav ltd. sep 2012 - feb 2013 6 months. kenya. flying the cessna caravan as a senior co-pilot around east africa region, doing private ... caravan">
           <div class="card-top">
-            <span class="source">pilotcareercenter.com</span>
-            <span class="score">Fit 76</span>
+            <span class="source">ke.linkedin.com</span>
+            <span class="score">Fit 83</span>
           </div>
-          <h2><a href="https://pilotcareercenter.com/Air-Carrier-PCC-Profile/4658/Skydive-Key-West" target="_blank" rel="noopener noreferrer">Skydive Key West - PILOT CAREER CENTER</a></h2>
-          <p>Apr 11, 2026 ... Post New Pilot Job New Pilot Job Post Jobs · Terms and Conditions ... Caravan · Challenger · Citation · Dash 8 · de Havilland DHC6 · E-Jets · Falcon Jets · Glex.</p>
+          <h2><a href="https://ke.linkedin.com/in/dalitso-ngoma-76846b31" target="_blank" rel="noopener noreferrer">Dalitso Ngoma - Line Pilot at ALS ltd (C208 / Dash8) | LinkedIn</a></h2>
+          <p>Apr 26, 2026 ... Freelance Pilot. Aeronav ltd. Sep 2012 - Feb 2013 6 months. Kenya. Flying the Cessna Caravan as a Senior Co-pilot around East Africa region, doing private ...</p>
           <div class="badges"><span class="badge">Caravan</span></div>
         </article>
         
-        <article class="job-card navajo" data-search="skydive marana - pilot career center apr 11, 2026 ... 2 pa31 - piper navajo twins. pilot bases / domiciles, kavq - marana regional ... post new pilot job new pilot job post jobs · terms and conditions · privacy ... pilotcareercenter.com navajo">
-          <div class="card-top">
-            <span class="source">pilotcareercenter.com</span>
-            <span class="score">Fit 76</span>
-          </div>
-          <h2><a href="https://pilotcareercenter.com/Air-Carrier-PCC-Profile/4612/Skydive-Marana" target="_blank" rel="noopener noreferrer">Skydive Marana - PILOT CAREER CENTER</a></h2>
-          <p>Apr 11, 2026 ... 2 PA31 - Piper Navajo Twins. Pilot Bases / Domiciles, KAVQ - Marana Regional ... Post New Pilot Job New Pilot Job Post Jobs · Terms and Conditions · Privacy ...</p>
-          <div class="badges"><span class="badge">Navajo</span></div>
-        </article>
-        
-        <article class="job-card navajo" data-search="eon airborne - pilot career center apr 5, 2026 ... 5 pa31 - piper navajo light twins. pilot bases / domiciles, czbm - aéroport ... post new pilot job new pilot job post jobs · terms and conditions · privacy ... pilotcareercenter.com navajo">
-          <div class="card-top">
-            <span class="source">pilotcareercenter.com</span>
-            <span class="score">Fit 76</span>
-          </div>
-          <h2><a href="https://pilotcareercenter.com/Air-Carrier-PCC-Profile/3340/EON-Airborne" target="_blank" rel="noopener noreferrer">EON Airborne - PILOT CAREER CENTER</a></h2>
-          <p>Apr 5, 2026 ... 5 PA31 - Piper Navajo Light Twins. Pilot Bases / Domiciles, CZBM - Aéroport ... Post New Pilot Job New Pilot Job Post Jobs · Terms and Conditions · Privacy ...</p>
-          <div class="badges"><span class="badge">Navajo</span></div>
-        </article>
-        
-        <article class="job-card navajo" data-search="sekani air - pilot career center apr 17, 2026 ... 1 pa31 - piper navajo 325 twin. pilot bases / domiciles, cyxs - prince ... post new pilot job new pilot job post jobs · terms and conditions · privacy ... pilotcareercenter.com navajo">
-          <div class="card-top">
-            <span class="source">pilotcareercenter.com</span>
-            <span class="score">Fit 76</span>
-          </div>
-          <h2><a href="https://pilotcareercenter.com/Air-Carrier-PCC-Profile/5625/Sekani-Air" target="_blank" rel="noopener noreferrer">Sekani Air - PILOT CAREER CENTER</a></h2>
-          <p>Apr 17, 2026 ... 1 PA31 - Piper Navajo 325 Twin. Pilot Bases / Domiciles, CYXS - Prince ... Post New Pilot Job New Pilot Job Post Jobs · Terms and Conditions · Privacy ...</p>
-          <div class="badges"><span class="badge">Navajo</span></div>
-        </article>
-        
-        <article class="job-card comanche pic" data-search="happy world pilots&#x27; day ✈️ | united airlines | 18 comments apr 26, 2026 ... thank you to every pilot who inspires the next generation and keeps the world moving safely. ... psa captain, but love the twin comanche. no alternative text ... linkedin.com comanche pic">
+        <article class="job-card  caravan" data-search="#vini | vini • flyvbird | 14 comments - linkedin apr 24, 2026 ... ... cessna caravan to our growing network and deploy it during our upcoming test ... pilot workload, and delivered measurable fuel and operational savings. caravan">
           <div class="card-top">
             <span class="source">linkedin.com</span>
-            <span class="score">Fit 71</span>
+            <span class="score">Fit 83</span>
           </div>
-          <h2><a href="https://www.linkedin.com/posts/united-airlines_happy-world-pilots-day-activity-7454250735493554176-2Xw4" target="_blank" rel="noopener noreferrer">Happy World Pilots&#x27; Day ✈️ | United Airlines | 18 comments</a></h2>
-          <p>Apr 26, 2026 ... Thank you to every pilot who inspires the next generation and keeps the world moving safely. ... PSA Captain, but love the Twin Comanche. No alternative text ...</p>
-          <div class="badges"><span class="badge">Comanche</span><span class="badge">PIC</span></div>
+          <h2><a href="https://www.linkedin.com/posts/viniflyvbird_vini-activity-7453386050690879488-5qMn" target="_blank" rel="noopener noreferrer">#vini | VINI • flyvbird | 14 comments - LinkedIn</a></h2>
+          <p>Apr 24, 2026 ... ... Cessna Caravan to our growing network and deploy it during our upcoming test ... pilot workload, and delivered measurable fuel and operational savings.</p>
+          <div class="badges"><span class="badge">Caravan</span></div>
         </article>
         
-        <article class="job-card navajo arizona" data-search="jobs in gallup, nm - indeed 7 hours ago ... navajo sanitation, llc. window rock, az 86515. $33 - $40 an hour. full-time. 40 ... job coach. easily apply. often replies in 1 day. ramah care services inc. indeed.com navajo arizona">
+        <article class="job-card  pc-12" data-search="kola sanusi - pc-12ng/ngx pilot // fi(a) - linkedin 7 days ago ... pc-12 ng/ngx pilot. flight instructor/ theoretical knowledge instructor . engineering background in robotics and artificial intelligence applications. pc-12">
           <div class="card-top">
-            <span class="source">indeed.com</span>
-            <span class="score">Fit 68</span>
+            <span class="source">ie.linkedin.com</span>
+            <span class="score">Fit 83</span>
           </div>
-          <h2><a href="https://www.indeed.com/l-City-of-Gallup,-NM-jobs.html" target="_blank" rel="noopener noreferrer">jobs in Gallup, NM - Indeed</a></h2>
-          <p>7 hours ago ... Navajo Sanitation, LLC. Window Rock, AZ 86515. $33 - $40 an hour. Full-time. 40 ... Job Coach. Easily apply. Often replies in 1 day. Ramah Care Services Inc.</p>
-          <div class="badges"><span class="badge">Navajo</span><span class="badge">Arizona</span></div>
-        </article>
-        
-        <article class="job-card navajo arizona" data-search="navajo county hiring detention deputy cadet in holbrook, az apr 26, 2026 ... posted 5:49:33 pm. this job was posted by https ... government administration. referrals increase your chances of interviewing at navajo county by 2x. linkedin.com navajo arizona">
-          <div class="card-top">
-            <span class="source">linkedin.com</span>
-            <span class="score">Fit 68</span>
-          </div>
-          <h2><a href="https://www.linkedin.com/jobs/view/detention-deputy-cadet-at-navajo-county-4404628911" target="_blank" rel="noopener noreferrer">Navajo County hiring Detention Deputy Cadet in Holbrook, AZ</a></h2>
-          <p>Apr 26, 2026 ... Posted 5:49:33 PM. This job was posted by https ... Government Administration. Referrals increase your chances of interviewing at Navajo County by 2x.</p>
-          <div class="badges"><span class="badge">Navajo</span><span class="badge">Arizona</span></div>
-        </article>
-        
-        <article class="job-card pc-12" data-search="adam lendi&#x27;s post - linkedin apr 21, 2026 ... this last 100 hours included more turbine experience and time aboard the pc-12 and i&#x27;ve nearly rolled over 700 multi engine hours! ... commercial pilot | retired ... linkedin.com pc-12">
-          <div class="card-top">
-            <span class="source">linkedin.com</span>
-            <span class="score">Fit 61</span>
-          </div>
-          <h2><a href="https://www.linkedin.com/posts/adamlendi_today-i-rolled-over-2000-flying-hours-while-activity-7452534364984336384-9Pbe" target="_blank" rel="noopener noreferrer">Adam Lendi&#x27;s Post - LinkedIn</a></h2>
-          <p>Apr 21, 2026 ... This last 100 hours included more turbine experience and time aboard the PC-12 and I&#x27;ve nearly rolled over 700 multi engine hours! ... Commercial Pilot | Retired ...</p>
+          <h2><a href="https://ie.linkedin.com/in/kola-sanusi-4768bb120" target="_blank" rel="noopener noreferrer">Kola Sanusi - PC-12NG/NGX Pilot // FI(A) - LinkedIn</a></h2>
+          <p>7 days ago ... PC-12 NG/NGX Pilot. Flight Instructor/ Theoretical Knowledge Instructor . Engineering background in Robotics and Artificial Intelligence applications.</p>
           <div class="badges"><span class="badge">PC-12</span></div>
         </article>
         
-        <article class="job-card navajo" data-search="utah navajo health system hiring transportation driver - prn as ... 6 days ago ... to learn more about &quot;glassdoor estimates,&quot; see our faq page. conversations @utah navajo health system. kick off the conversation by asking about salaries, ... glassdoor.com navajo">
+        <article class="job-card  navajo sic pic" data-search="leadership in ems: supporting crews in high-pressure situations apr 10, 2026 ... ... navajo reservation, the largest reservation in the country, bigger than some ... part one focuses on what the job is and what it requires in real time. navajo sic pic">
           <div class="card-top">
-            <span class="source">glassdoor.com</span>
+            <span class="source">linkedin.com</span>
+            <span class="score">Fit 77</span>
+          </div>
+          <h2><a href="https://www.linkedin.com/posts/dean-hoffman-86492641_ive-been-in-ems-a-long-time-partners-captains-activity-7448508390634389504-W54H" target="_blank" rel="noopener noreferrer">Leadership in EMS: Supporting Crews in High-Pressure Situations</a></h2>
+          <p>Apr 10, 2026 ... ... Navajo Reservation, the largest reservation in the country, bigger than some ... Part one focuses on what the job is and what it requires in real time.</p>
+          <div class="badges"><span class="badge">Navajo</span><span class="badge">SIC</span><span class="badge">PIC</span></div>
+        </article>
+        
+        <article class="job-card  navajo" data-search="gas plant jobs, employment in new mexico | indeed 2 days ago ... facility operator. pilot water solutions llc. hobbs, nm 88242. full-time. on call ... support services manager - 300. navajo agricultural products indust. navajo">
+          <div class="card-top">
+            <span class="source">indeed.com</span>
             <span class="score">Fit 58</span>
           </div>
-          <h2><a href="https://www.glassdoor.com/job-listing/transportation-driver-prn-as-needed-utah-navajo-health-system-JV_KO0,35_KE36,61.htm?jl=1010072857625" target="_blank" rel="noopener noreferrer">Utah Navajo Health System hiring Transportation Driver - PRN As ...</a></h2>
-          <p>6 days ago ... To learn more about &quot;Glassdoor Estimates,&quot; see our FAQ page. Conversations @Utah Navajo Health System. Kick off the conversation by asking about salaries, ...</p>
+          <h2><a href="https://www.indeed.com/q-gas-plant-l-new-mexico-jobs.html?start=10" target="_blank" rel="noopener noreferrer">Gas Plant Jobs, Employment in New Mexico | Indeed</a></h2>
+          <p>2 days ago ... Facility Operator. Pilot Water Solutions LLC. Hobbs, NM 88242. Full-time. On call ... Support Services Manager - 300. NAVAJO AGRICULTURAL PRODUCTS INDUST.</p>
           <div class="badges"><span class="badge">Navajo</span></div>
         </article>
         
-        <article class="job-card king-air comanche" data-search="simon burnham&#x27;s post - linkedin 7 days ago ... ... job?” “maybe king air if i&#x27;m lucky” “work your way up and enjoy the ride ... comanche planes. i addressed the father of a lad i taught to fly as sir ... linkedin.com king air comanche">
+        <article class="job-card  navajo" data-search="ame day 2026 - miles janzen | sunwest aviation - linkedin apr 20, 2026 ... ... job often comes down to skill, calm decision-making, and making the ... was that the time i flew the navajo up? like · reply. 1 reaction. to view or add ... navajo">
           <div class="card-top">
             <span class="source">linkedin.com</span>
-            <span class="score">Fit 13</span>
+            <span class="score">Fit 20</span>
           </div>
-          <h2><a href="https://www.linkedin.com/posts/simon-burnham-5956252b_thought-of-the-day-maybe-this-is-the-grumpy-activity-7454795144031186944-4S1L" target="_blank" rel="noopener noreferrer">Simon Burnham&#x27;s Post - LinkedIn</a></h2>
-          <p>7 days ago ... ... job?” “Maybe King Air if I&#x27;m lucky” “Work your way up and enjoy the ride ... Comanche planes. I addressed the father of a lad I taught to fly as Sir ...</p>
-          <div class="badges"><span class="badge">King Air</span><span class="badge">Comanche</span></div>
+          <h2><a href="https://www.linkedin.com/posts/sunwest-aviation_ame-day-2026-miles-janzen-activity-7451993101562200064-X0tB" target="_blank" rel="noopener noreferrer">AME Day 2026 - Miles Janzen | Sunwest Aviation - LinkedIn</a></h2>
+          <p>Apr 20, 2026 ... ... job often comes down to skill, calm decision-making, and making the ... Was that the time I flew the Navajo up? Like · Reply. 1 Reaction. To view or add ...</p>
+          <div class="badges"><span class="badge">Navajo</span></div>
         </article>
         
-    </section>
-
-    <div id="noResults" class="no-results">
-      No jobs match those filters. Try clearing a filter or search term.
-    </div>
+        <article class="job-card  navajo" data-search="are first-year abroad programs reshaping college admissions? apr 10, 2026 ... ... job market trends and employer needs. but i keep coming back to what ... navajo technical university; david gaston, ed.d. at georgia tech; glenn ... navajo">
+          <div class="card-top">
+            <span class="source">linkedin.com</span>
+            <span class="score">Fit 20</span>
+          </div>
+          <h2><a href="https://www.linkedin.com/posts/antonio-barneto-705261190_are-first-year-abroad-programs-reshaping-activity-7448391961662812160-QNva" target="_blank" rel="noopener noreferrer">Are First-Year Abroad Programs Reshaping College Admissions?</a></h2>
+          <p>Apr 10, 2026 ... ... job market trends and employer needs. But I keep coming back to what ... Navajo Technical University; David Gaston, Ed.D. at Georgia Tech; Glenn ...</p>
+          <div class="badges"><span class="badge">Navajo</span></div>
+        </article>
+        
+        <article class="job-card generic-card pc-12 cargo sic pic arizona generic-multi-aircraft" data-search="300 hour pilot job jobs, employment | indeed 15 hours ago ... sick leave – newly hired or transferred employees into… pilot ft - pc-12 first officer ... arizonacaptain jobs in jacksonville, flcargo pilot jobs in ... pc-12 cargo sic pic arizona generic / multi-aircraft">
+          <div class="card-top">
+            <span class="source">indeed.com</span>
+            <span class="score">Fit 158</span>
+          </div>
+          <h2><a href="https://www.indeed.com/q-300-hour-pilot-job-jobs.html?jt=fulltime" target="_blank" rel="noopener noreferrer">300 Hour Pilot Job Jobs, Employment | Indeed</a></h2>
+          <p>15 hours ago ... Sick Leave – Newly hired or transferred employees into… Pilot FT - PC-12 First Officer ... ArizonaCaptain jobs in Jacksonville, FlCargo Pilot jobs in ...</p>
+          <div class="badges"><span class="badge">PC-12</span><span class="badge">Cargo</span><span class="badge">SIC</span><span class="badge">PIC</span><span class="badge">Arizona</span><span class="badge">Generic / Multi-Aircraft</span></div>
+        </article>
+        
+        <article class="job-card generic-card king-air part-135 sic pic arizona generic-multi-aircraft" data-search="pilot jobs///corporate / vip - pilot career center 2 days ago ... captain — citation latitude - phoenix az pic - ce680a - phoenix az cutter aviation ... aerial survey first officer — king air - bridgewater va survey sic - king ... king air part 135 sic pic arizona generic / multi-aircraft">
+          <div class="card-top">
+            <span class="source">pilotcareercenter.com</span>
+            <span class="score">Fit 131</span>
+          </div>
+          <h2><a href="https://pilotcareercenter.com/CORPORATE/USA/PART-91-135" target="_blank" rel="noopener noreferrer">Pilot Jobs///Corporate / VIP - PILOT CAREER CENTER</a></h2>
+          <p>2 days ago ... Captain — Citation Latitude - Phoenix AZ PIC - CE680A - Phoenix AZ Cutter Aviation ... Aerial Survey First Officer — King Air - Bridgewater VA Survey SIC - King ...</p>
+          <div class="badges"><span class="badge">King Air</span><span class="badge">Part 135</span><span class="badge">SIC</span><span class="badge">PIC</span><span class="badge">Arizona</span><span class="badge">Generic / Multi-Aircraft</span></div>
+        </article>
+        
+        <article class="job-card generic-card king-air part-135 sic arizona generic-multi-aircraft" data-search="29 part 135 pilot jobs in phoenix, az, may 2026 | glassdoor 12 hours ago ... advanced air. second in command pilot - king air. phoenix, az. $50.00 per hour (employer provided). easy apply. 100% company paid health insurance including ... king air part 135 sic arizona generic / multi-aircraft">
+          <div class="card-top">
+            <span class="source">glassdoor.com</span>
+            <span class="score">Fit 131</span>
+          </div>
+          <h2><a href="https://www.glassdoor.com/Job/phoenix-part-135-pilot-jobs-SRCH_IL.0,7_IC1133904_KO8,22.htm" target="_blank" rel="noopener noreferrer">29 part 135 pilot Jobs in Phoenix, AZ, May 2026 | Glassdoor</a></h2>
+          <p>12 hours ago ... Advanced Air. Second in Command Pilot - King Air. Phoenix, AZ. $50.00 Per Hour (Employer provided). Easy Apply. 100% Company Paid Health Insurance including ...</p>
+          <div class="badges"><span class="badge">King Air</span><span class="badge">Part 135</span><span class="badge">SIC</span><span class="badge">Arizona</span><span class="badge">Generic / Multi-Aircraft</span></div>
+        </article>
+        
+        <article class="job-card generic-card pc-12 part-135 sic pic generic-multi-aircraft" data-search="aviation jobs, pilot jobs, aviation employment, aviation job fairs ... 8 hours ago ... ... pc-12 pic - michigan · (members only). may 04, 2026, g500 pic - michigan ... part 135 pic - texas · (members only). may 01, 2026, citation 650 part 135 sic ... pc-12 part 135 sic pic generic / multi-aircraft">
+          <div class="card-top">
+            <span class="source">ppb.climbto350.com</span>
+            <span class="score">Fit 111</span>
+          </div>
+          <h2><a href="https://ppb.climbto350.com/climbto350_aviation_jobs_board.cfm" target="_blank" rel="noopener noreferrer">Aviation Jobs, Pilot Jobs, Aviation Employment, Aviation Job Fairs ...</a></h2>
+          <p>8 hours ago ... ... PC-12 PIC - Michigan · (Members Only). May 04, 2026, G500 PIC - Michigan ... Part 135 PIC - Texas · (Members Only). May 01, 2026, Citation 650 Part 135 SIC ...</p>
+          <div class="badges"><span class="badge">PC-12</span><span class="badge">Part 135</span><span class="badge">SIC</span><span class="badge">PIC</span><span class="badge">Generic / Multi-Aircraft</span></div>
+        </article>
+        
+        <article class="job-card generic-card king-air part-135 pic generic-multi-aircraft" data-search="pilot jobs in indiana - jsfirm.com 5 days ago ... the ... chief pilot / captain - king air / cessna 310 · patriot aviation ... part 135 flight operations while serving as an active line pilot. this is a ... king air part 135 pic generic / multi-aircraft">
+          <div class="card-top">
+            <span class="source">jsfirm.com</span>
+            <span class="score">Fit 109</span>
+          </div>
+          <h2><a href="https://www.jsfirm.com/all%20positions/alltypes/Indiana/allcountries/pilot/searchpopularjobs" target="_blank" rel="noopener noreferrer">Pilot jobs in Indiana - JSfirm.com</a></h2>
+          <p>5 days ago ... The ... Chief Pilot / Captain - King Air / Cessna 310 · Patriot Aviation ... Part 135 flight operations while serving as an active line pilot. This is a ...</p>
+          <div class="badges"><span class="badge">King Air</span><span class="badge">Part 135</span><span class="badge">PIC</span><span class="badge">Generic / Multi-Aircraft</span></div>
+        </article>
+        
+        <article class="job-card generic-card caravan king-air cargo sic low-time-friendly generic-multi-aircraft" data-search="mountain air cargo, inc.&#x27;s post - linkedin apr 16, 2026 ... &quot; find this job and more at the low time pilot blog: https://lnkd.in ... cessna caravan 208 ppc. former left seat king air 200 ppc. 10h. report this ... caravan king air cargo sic low-time friendly generic / multi-aircraft">
+          <div class="card-top">
+            <span class="source">linkedin.com</span>
+            <span class="score">Fit 97</span>
+          </div>
+          <h2><a href="https://www.linkedin.com/posts/mountain-air-cargo-inc-_thank-you-brian-childs-for-sharing-this-for-activity-7450550328464191488-DY86" target="_blank" rel="noopener noreferrer">Mountain Air Cargo, Inc.&#x27;s Post - LinkedIn</a></h2>
+          <p>Apr 16, 2026 ... &quot; Find this job and more at the Low Time Pilot blog: https://lnkd.in ... Cessna Caravan 208 PPC. Former Left Seat King Air 200 PPC. 10h. Report this ...</p>
+          <div class="badges"><span class="badge">Caravan</span><span class="badge">King Air</span><span class="badge">Cargo</span><span class="badge">SIC</span><span class="badge">Low-Time Friendly</span><span class="badge">Generic / Multi-Aircraft</span></div>
+        </article>
+        
+        <article class="job-card generic-card caravan pic arizona generic-multi-aircraft" data-search="pilot career center - usa - pilot jobs and more 2 days ago ... captain — citation latitude - phoenix az pic - ce680a - phoenix ... chief pilot — c208 caravan amphib - miami chief pilot - c208 amphib - miami flyexclusive ... caravan pic arizona generic / multi-aircraft">
+          <div class="card-top">
+            <span class="source">pilotcareercenter.com</span>
+            <span class="score">Fit 93</span>
+          </div>
+          <h2><a href="https://pilotcareercenter.com/" target="_blank" rel="noopener noreferrer">PILOT CAREER CENTER - USA - Pilot Jobs and more</a></h2>
+          <p>2 days ago ... Captain — Citation Latitude - Phoenix AZ PIC - CE680A - Phoenix ... Chief Pilot — C208 Caravan Amphib - Miami Chief Pilot - C208 Amphib - Miami flyExclusive ...</p>
+          <div class="badges"><span class="badge">Caravan</span><span class="badge">PIC</span><span class="badge">Arizona</span><span class="badge">Generic / Multi-Aircraft</span></div>
+        </article>
+        
+        <article class="job-card generic-card king-air part-135 sic pic generic-multi-aircraft" data-search="pilot jobs, employment in california | indeed apr 21, 2026 ... king air 350 captain - watsonville, ca ... you will coordinate with reliable&#x27;s part 135 airline operations to support standardization of pilot procedures across ... king air part 135 sic pic generic / multi-aircraft">
+          <div class="card-top">
+            <span class="source">indeed.com</span>
+            <span class="score">Fit 93</span>
+          </div>
+          <h2><a href="https://www.indeed.com/q-pilot-l-california-jobs.html?start=15" target="_blank" rel="noopener noreferrer">Pilot Jobs, Employment in California | Indeed</a></h2>
+          <p>Apr 21, 2026 ... King Air 350 Captain - Watsonville, CA ... You will coordinate with Reliable&#x27;s Part 135 airline operations to support standardization of pilot procedures across ...</p>
+          <div class="badges"><span class="badge">King Air</span><span class="badge">Part 135</span><span class="badge">SIC</span><span class="badge">PIC</span><span class="badge">Generic / Multi-Aircraft</span></div>
+        </article>
+        
+        <article class="job-card generic-card caravan cargo sic generic-multi-aircraft" data-search="canada - pilot jobs and more - pilot career center 7 days ago ... cargo first officers — metroliner iii - calgary fos - metro - calgary carson air ... charter pilot — cessna 208 amphib - toronto pilot - c208 amphib - cytz ... caravan cargo sic generic / multi-aircraft">
+          <div class="card-top">
+            <span class="source">pilotcareercenter.com</span>
+            <span class="score">Fit 91</span>
+          </div>
+          <h2><a href="https://pilotcareercenter.com/CANADA" target="_blank" rel="noopener noreferrer">CANADA - Pilot Jobs and more - PILOT CAREER CENTER</a></h2>
+          <p>7 days ago ... Cargo First Officers — Metroliner III - Calgary FOs - Metro - Calgary Carson Air ... Charter Pilot — Cessna 208 Amphib - Toronto Pilot - C208 Amphib - CYTZ ...</p>
+          <div class="badges"><span class="badge">Caravan</span><span class="badge">Cargo</span><span class="badge">SIC</span><span class="badge">Generic / Multi-Aircraft</span></div>
+        </article>
+        
+        <article class="job-card generic-card king-air pic arizona generic-multi-aircraft" data-search="triton airways - pilot career center apr 25, 2026 ... ... king air 200/350 - lex. &gt; captains - citation excel - lex 15/13 pic - ce560xl ... phoenix · pittsburgh · portland · san diego · san fran · seattle · st. louis. king air pic arizona generic / multi-aircraft">
+          <div class="card-top">
+            <span class="source">pilotcareercenter.com</span>
+            <span class="score">Fit 83</span>
+          </div>
+          <h2><a href="https://pilotcareercenter.com/Air-Carrier-PCC-Profile/5043/Triton-Airways" target="_blank" rel="noopener noreferrer">Triton Airways - PILOT CAREER CENTER</a></h2>
+          <p>Apr 25, 2026 ... ... King Air 200/350 - LEX. &gt; Captains - Citation Excel - LEX 15/13 PIC - CE560XL ... PHOENIX · PITTSBURGH · PORTLAND · SAN DIEGO · SAN FRAN · SEATTLE · ST. LOUIS.</p>
+          <div class="badges"><span class="badge">King Air</span><span class="badge">PIC</span><span class="badge">Arizona</span><span class="badge">Generic / Multi-Aircraft</span></div>
+        </article>
+        
+        <article class="job-card generic-card king-air pic arizona generic-multi-aircraft" data-search="pilot jobs in indiana - jsfirm.com 3 days ago ... phoenix, arizona toronto, ontario canada berlin, germany search by ... chief pilot / captain - king air / cessna 310 · patriot aviation huntington ... king air pic arizona generic / multi-aircraft">
+          <div class="card-top">
+            <span class="source">jsfirm.com</span>
+            <span class="score">Fit 75</span>
+          </div>
+          <h2><a href="https://www.jsfirm.com/pilot-fixed%20wing/all/Indiana/jobs" target="_blank" rel="noopener noreferrer">Pilot Jobs in Indiana - JSfirm.com</a></h2>
+          <p>3 days ago ... Phoenix, Arizona Toronto, Ontario Canada Berlin, Germany Search by ... Chief Pilot / Captain - King Air / Cessna 310 · Patriot Aviation Huntington ...</p>
+          <div class="badges"><span class="badge">King Air</span><span class="badge">PIC</span><span class="badge">Arizona</span><span class="badge">Generic / Multi-Aircraft</span></div>
+        </article>
+        
+        <article class="job-card generic-card pc-12 part-135 generic-multi-aircraft" data-search="pilot jobs in idaho - jsfirm.com 2 days ago ... part 135 utility helicopter chief pilot location: coeur d&#x27;alene, idaho ... overviewjob summaryat this base you will be working on a pc-12 (turboprop) experience ... pc-12 part 135 generic / multi-aircraft">
+          <div class="card-top">
+            <span class="source">jsfirm.com</span>
+            <span class="score">Fit 74</span>
+          </div>
+          <h2><a href="https://www.jsfirm.com/all%20positions/alltypes/Idaho/allcountries/pilot/searchpopularjobs" target="_blank" rel="noopener noreferrer">Pilot jobs in Idaho - JSfirm.com</a></h2>
+          <p>2 days ago ... Part 135 Utility Helicopter Chief Pilot Location: Coeur d&#x27;Alene, Idaho ... OverviewJob SummaryAt this base you will be working on a PC-12 (turboprop) experience ...</p>
+          <div class="badges"><span class="badge">PC-12</span><span class="badge">Part 135</span><span class="badge">Generic / Multi-Aircraft</span></div>
+        </article>
+        
+        <article class="job-card generic-card pc-12 arizona generic-multi-aircraft" data-search="pilot jobs in alaska - jsfirm.com 3 days ago ... phoenix, arizona toronto, ontario canada berlin, germany search by country ... pc-12 aircraft... rotary wing utility pilot - interior, alaska · maritime ... pc-12 arizona generic / multi-aircraft">
+          <div class="card-top">
+            <span class="source">jsfirm.com</span>
+            <span class="score">Fit 68</span>
+          </div>
+          <h2><a href="https://www.jsfirm.com/allpositions/alltypes/Alaska/allcountries/pilot/searchpopularjobs" target="_blank" rel="noopener noreferrer">Pilot jobs in Alaska - JSfirm.com</a></h2>
+          <p>3 days ago ... Phoenix, Arizona Toronto, Ontario Canada Berlin, Germany Search by Country ... PC-12 aircraft... Rotary Wing Utility Pilot - Interior, Alaska · Maritime ...</p>
+          <div class="badges"><span class="badge">PC-12</span><span class="badge">Arizona</span><span class="badge">Generic / Multi-Aircraft</span></div>
+        </article>
+        
+        <article class="job-card generic-card king-air part-135 pic generic-multi-aircraft" data-search="helicopter pilot jobs, employment in alaska | indeed 1 day ago ... pic helicopter time and meet all far part 135 requirements. no… chief ... pilot - king air pic - dutch harbor, ak. aero air, llc. unalaska, ak 99692. king air part 135 pic generic / multi-aircraft">
+          <div class="card-top">
+            <span class="source">indeed.com</span>
+            <span class="score">Fit 56</span>
+          </div>
+          <h2><a href="https://www.indeed.com/q-helicopter-pilot-l-alaska-jobs.html?start=15" target="_blank" rel="noopener noreferrer">Helicopter Pilot Jobs, Employment in Alaska | Indeed</a></h2>
+          <p>1 day ago ... PIC Helicopter time and meet all FAR Part 135 requirements. No… Chief ... Pilot - King Air PIC - Dutch Harbor, AK. Aero Air, LLC. Unalaska, AK 99692.</p>
+          <div class="badges"><span class="badge">King Air</span><span class="badge">Part 135</span><span class="badge">PIC</span><span class="badge">Generic / Multi-Aircraft</span></div>
+        </article>
+        
+        <article class="job-card generic-card caravan arizona generic-multi-aircraft" data-search="worldwide jet charter llc - pilot career center apr 5, 2026 ... phoenix, az 85027. telephone, 602 726-9990. website. worldwide jet charter ... caravan · challenger · citation · dash 8 · de havilland dhc6 · e-jets · falcon jets. caravan arizona generic / multi-aircraft">
+          <div class="card-top">
+            <span class="source">pilotcareercenter.com</span>
+            <span class="score">Fit 48</span>
+          </div>
+          <h2><a href="https://pilotcareercenter.com/Air-Carrier-PCC-Profile/3431/Worldwide-Jet-Charter-LLC" target="_blank" rel="noopener noreferrer">Worldwide Jet Charter LLC - PILOT CAREER CENTER</a></h2>
+          <p>Apr 5, 2026 ... Phoenix, AZ 85027. Telephone, 602 726-9990. Website. Worldwide Jet Charter ... Caravan · Challenger · Citation · Dash 8 · de Havilland DHC6 · E-Jets · Falcon Jets.</p>
+          <div class="badges"><span class="badge">Caravan</span><span class="badge">Arizona</span><span class="badge">Generic / Multi-Aircraft</span></div>
+        </article>
+        
+        <article class="job-card generic-card caravan arizona generic-multi-aircraft" data-search="sacramento air charter - pilot career center apr 25, 2026 ... phoenix · pittsburgh · portland · san diego · san fran · seattle · st. louis · tampa · wash ... caravan · challenger · citation · dash 8 · de havilland dhc6 · e- ... caravan arizona generic / multi-aircraft">
+          <div class="card-top">
+            <span class="source">pilotcareercenter.com</span>
+            <span class="score">Fit 48</span>
+          </div>
+          <h2><a href="https://pilotcareercenter.com/Air-Carrier-PCC-Profile/4899/Sacramento-Air-Charter" target="_blank" rel="noopener noreferrer">Sacramento Air Charter - PILOT CAREER CENTER</a></h2>
+          <p>Apr 25, 2026 ... PHOENIX · PITTSBURGH · PORTLAND · SAN DIEGO · SAN FRAN · SEATTLE · ST. LOUIS · TAMPA · WASH ... Caravan · Challenger · Citation · Dash 8 · de Havilland DHC6 · E- ...</p>
+          <div class="badges"><span class="badge">Caravan</span><span class="badge">Arizona</span><span class="badge">Generic / Multi-Aircraft</span></div>
+        </article>
+        
+        <article class="job-card generic-card king-air part-135 generic-multi-aircraft" data-search="executive fliteways inc. - pilot career center apr 13, 2026 ... 1 be200 - beech king air 200 turboprop, 1 be90 - beech kingair c90 ... part 91/part 135 charters and aircraft management from long island. alliance ... king air part 135 generic / multi-aircraft">
+          <div class="card-top">
+            <span class="source">pilotcareercenter.com</span>
+            <span class="score">Fit 44</span>
+          </div>
+          <h2><a href="https://pilotcareercenter.com/Air-Carrier-PCC-Profile/2970/Executive-Fliteways-Inc." target="_blank" rel="noopener noreferrer">Executive Fliteways Inc. - PILOT CAREER CENTER</a></h2>
+          <p>Apr 13, 2026 ... 1 BE200 - Beech King Air 200 Turboprop, 1 BE90 - Beech KingAir C90 ... Part 91/Part 135 Charters and Aircraft Management from Long Island. Alliance ...</p>
+          <div class="badges"><span class="badge">King Air</span><span class="badge">Part 135</span><span class="badge">Generic / Multi-Aircraft</span></div>
+        </article>
+        
+        <article class="job-card generic-card king-air sic arizona generic-multi-aircraft" data-search="pilot jobs in alabama - jsfirm.com apr 7, 2026 ... phoenix, arizona toronto, ontario canada berlin, germany search by ... we have two pilot openings available for king air c-90 pilots for a south ... king air sic arizona generic / multi-aircraft">
+          <div class="card-top">
+            <span class="source">jsfirm.com</span>
+            <span class="score">Fit 42</span>
+          </div>
+          <h2><a href="https://www.jsfirm.com/pilot-fixed%20wing/all/Alabama/jobs" target="_blank" rel="noopener noreferrer">Pilot Jobs in Alabama - JSfirm.com</a></h2>
+          <p>Apr 7, 2026 ... Phoenix, Arizona Toronto, Ontario Canada Berlin, Germany Search by ... We have Two pilot openings available for King air C-90 pilots for a South ...</p>
+          <div class="badges"><span class="badge">King Air</span><span class="badge">SIC</span><span class="badge">Arizona</span><span class="badge">Generic / Multi-Aircraft</span></div>
+        </article>
+        
+        <article class="job-card generic-card caravan arizona generic-multi-aircraft" data-search="skydive buckeye - pilot career center apr 6, 2026 ... phoenix · pittsburgh · portland · san diego · san fran · seattle · st. louis · tampa · wash ... caravan · challenger · citation · dash 8 · de havilland dhc6 · e- ... caravan arizona generic / multi-aircraft">
+          <div class="card-top">
+            <span class="source">pilotcareercenter.com</span>
+            <span class="score">Fit 40</span>
+          </div>
+          <h2><a href="https://pilotcareercenter.com/Air-Carrier-PCC-Profile/4611/Skydive-Buckeye" target="_blank" rel="noopener noreferrer">Skydive Buckeye - PILOT CAREER CENTER</a></h2>
+          <p>Apr 6, 2026 ... PHOENIX · PITTSBURGH · PORTLAND · SAN DIEGO · SAN FRAN · SEATTLE · ST. LOUIS · TAMPA · WASH ... Caravan · Challenger · Citation · Dash 8 · de Havilland DHC6 · E- ...</p>
+          <div class="badges"><span class="badge">Caravan</span><span class="badge">Arizona</span><span class="badge">Generic / Multi-Aircraft</span></div>
+        </article>
+        
+        <article class="job-card generic-card caravan arizona generic-multi-aircraft" data-search="federal airlines - pilot career center apr 16, 2026 ... 6 c208b - cessna 208ex grand caravan turboprops, 6 c208b - cessna 208b grand ... phoenix · pittsburgh · portland · san diego · san fran · seattle · st. louis. caravan arizona generic / multi-aircraft">
+          <div class="card-top">
+            <span class="source">pilotcareercenter.com</span>
+            <span class="score">Fit 40</span>
+          </div>
+          <h2><a href="https://pilotcareercenter.com/Air-Carrier-PCC-Profile/1125/Federal-Airlines" target="_blank" rel="noopener noreferrer">Federal Airlines - PILOT CAREER CENTER</a></h2>
+          <p>Apr 16, 2026 ... 6 C208B - Cessna 208EX Grand Caravan Turboprops, 6 C208B - Cessna 208B Grand ... PHOENIX · PITTSBURGH · PORTLAND · SAN DIEGO · SAN FRAN · SEATTLE · ST. LOUIS.</p>
+          <div class="badges"><span class="badge">Caravan</span><span class="badge">Arizona</span><span class="badge">Generic / Multi-Aircraft</span></div>
+        </article>
+        
+        <article class="job-card generic-card caravan arizona generic-multi-aircraft" data-search="flight solutions - pilot career center apr 25, 2026 ... phoenix · pittsburgh · portland · san diego · san fran · seattle · st. louis · tampa · wash ... caravan · challenger · citation · dash 8 · de havilland dhc6 · e- ... caravan arizona generic / multi-aircraft">
+          <div class="card-top">
+            <span class="source">pilotcareercenter.com</span>
+            <span class="score">Fit 40</span>
+          </div>
+          <h2><a href="https://pilotcareercenter.com/Air-Carrier-PCC-Profile/4897/Flight-Solutions" target="_blank" rel="noopener noreferrer">Flight Solutions - PILOT CAREER CENTER</a></h2>
+          <p>Apr 25, 2026 ... PHOENIX · PITTSBURGH · PORTLAND · SAN DIEGO · SAN FRAN · SEATTLE · ST. LOUIS · TAMPA · WASH ... Caravan · Challenger · Citation · Dash 8 · de Havilland DHC6 · E- ...</p>
+          <div class="badges"><span class="badge">Caravan</span><span class="badge">Arizona</span><span class="badge">Generic / Multi-Aircraft</span></div>
+        </article>
+        
+        <article class="job-card generic-card pc-12 pic generic-multi-aircraft" data-search="research pilot with security clearance - linkedin 2 days ago ... ... pilatus pc-12, t-34, rq-4 global hawk, and tg-14. duties include: conducting ... airline captain jobs. 84 open jobs · fighter pilot jobs. 264 open jobs ... pc-12 pic generic / multi-aircraft">
+          <div class="card-top">
+            <span class="source">linkedin.com</span>
+            <span class="score">Fit 38</span>
+          </div>
+          <h2><a href="https://www.linkedin.com/jobs/view/research-pilot-with-security-clearance-at-integration-innovation-inc-4409872087" target="_blank" rel="noopener noreferrer">Research Pilot with Security Clearance - LinkedIn</a></h2>
+          <p>2 days ago ... ... Pilatus PC-12, T-34, RQ-4 Global Hawk, and TG-14. Duties include: Conducting ... Airline Captain jobs. 84 open jobs · Fighter Pilot jobs. 264 open jobs ...</p>
+          <div class="badges"><span class="badge">PC-12</span><span class="badge">PIC</span><span class="badge">Generic / Multi-Aircraft</span></div>
+        </article>
+        
+        <article class="job-card generic-card pc-12 sic generic-multi-aircraft" data-search="north star air - pilot career center apr 18, 2026 ... ... pc-12, dash 8-100, basler bt67 (dc3), atr-72-500f and atr-72-500f-lcd. with ... ground to flight first officer programground to flight first officer program. pc-12 sic generic / multi-aircraft">
+          <div class="card-top">
+            <span class="source">pilotcareercenter.com</span>
+            <span class="score">Fit 38</span>
+          </div>
+          <h2><a href="https://pilotcareercenter.com/Air-Carrier-PCC-Profile/227/North-Star-Air-ON" target="_blank" rel="noopener noreferrer">North Star Air - PILOT CAREER CENTER</a></h2>
+          <p>Apr 18, 2026 ... ... PC-12, Dash 8-100, Basler BT67 (DC3), ATR-72-500F and ATR-72-500F-LCD. With ... Ground to Flight First Officer ProgramGround to Flight First Officer Program.</p>
+          <div class="badges"><span class="badge">PC-12</span><span class="badge">SIC</span><span class="badge">Generic / Multi-Aircraft</span></div>
+        </article>
+        
+        <article class="job-card generic-card king-air part-135 generic-multi-aircraft" data-search="helicopter pilot jobs, employment in roseville, mn | indeed apr 16, 2026 ... the primary responsibility will be flying a king air 350 under part 91 and part 135 while conducting a safe operation within the north central aviation general ... king air part 135 generic / multi-aircraft">
+          <div class="card-top">
+            <span class="source">indeed.com</span>
+            <span class="score">Fit 36</span>
+          </div>
+          <h2><a href="https://www.indeed.com/q-helicopter-pilot-l-roseville,-mn-jobs.html" target="_blank" rel="noopener noreferrer">Helicopter Pilot Jobs, Employment in Roseville, MN | Indeed</a></h2>
+          <p>Apr 16, 2026 ... The primary responsibility will be flying a King Air 350 under part 91 and part 135 while conducting a safe operation within the North Central Aviation General ...</p>
+          <div class="badges"><span class="badge">King Air</span><span class="badge">Part 135</span><span class="badge">Generic / Multi-Aircraft</span></div>
+        </article>
+        
+        <article class="job-card generic-card caravan generic-multi-aircraft" data-search="cpl pilot jobs in ontario - indeed 5 days ago ... hold a valid transport canada atpl or commercial pilot license with… fire detection pilot (c208). caravan generic / multi-aircraft">
+          <div class="card-top">
+            <span class="source">ca.indeed.com</span>
+            <span class="score">Fit -7</span>
+          </div>
+          <h2><a href="https://ca.indeed.com/q-cpl-pilot-l-ontario-jobs.html" target="_blank" rel="noopener noreferrer">Cpl Pilot jobs in Ontario - Indeed</a></h2>
+          <p>5 days ago ... Hold a valid Transport Canada ATPL or Commercial Pilot License with… Fire Detection Pilot (C208).</p>
+          <div class="badges"><span class="badge">Caravan</span><span class="badge">Generic / Multi-Aircraft</span></div>
+        </article>
+        </section>
+    <div id="noResults" class="no-results">No jobs match those filters.</div>
   </main>
-
-  <footer>
-    Generated automatically by GitHub Actions using Google Programmable Search.
-  </footer>
+  <footer>Generic or multi-aircraft listings are shaded and sorted toward the bottom.</footer>
 
   <script>
-    const filterButtons = document.querySelectorAll(".filter-btn");
-    const cards = document.querySelectorAll(".job-card");
-    const searchBox = document.getElementById("searchBox");
-    const visibleCount = document.getElementById("visibleCount");
-    const noResults = document.getElementById("noResults");
-    const themeToggle = document.getElementById("themeToggle");
+    const filterButtons=document.querySelectorAll(".filter-btn");
+    const cards=document.querySelectorAll(".job-card");
+    const searchBox=document.getElementById("searchBox");
+    const visibleCount=document.getElementById("visibleCount");
+    const noResults=document.getElementById("noResults");
+    const themeToggle=document.getElementById("themeToggle");
 
-    function applyFilters() {
-      const activeFilters = Array.from(filterButtons)
-        .filter(btn => btn.classList.contains("active"))
-        .map(btn => btn.dataset.filter);
-
-      const searchText = searchBox.value.trim().toLowerCase();
-      let count = 0;
-
-      cards.forEach(card => {
-        const matchesFilters = activeFilters.length === 0 ||
-          activeFilters.some(filter => card.classList.contains(filter));
-
-        const matchesSearch = searchText === "" ||
-          card.dataset.search.includes(searchText);
-
-        const show = matchesFilters && matchesSearch;
-        card.style.display = show ? "flex" : "none";
-        if (show) count++;
+    function applyFilters(){
+      const active=Array.from(filterButtons).filter(b=>b.classList.contains("active")).map(b=>b.dataset.filter);
+      const q=searchBox.value.trim().toLowerCase();
+      let count=0;
+      cards.forEach(card=>{
+        const matchFilter=active.length===0 || active.some(f=>card.classList.contains(f));
+        const matchSearch=q==="" || card.dataset.search.includes(q);
+        const show=matchFilter && matchSearch;
+        card.style.display=show?"flex":"none";
+        if(show) count++;
       });
-
-      visibleCount.textContent = count;
-      noResults.style.display = count === 0 ? "block" : "none";
+      visibleCount.textContent=count;
+      noResults.style.display=count===0?"block":"none";
     }
 
-    filterButtons.forEach(btn => {
-      btn.addEventListener("click", () => {
-        btn.classList.toggle("active");
-        applyFilters();
-      });
-    });
-
-    searchBox.addEventListener("input", applyFilters);
-
-    themeToggle.addEventListener("click", () => {
+    filterButtons.forEach(btn=>btn.addEventListener("click",()=>{btn.classList.toggle("active");applyFilters();}));
+    searchBox.addEventListener("input",applyFilters);
+    themeToggle.addEventListener("click",()=>{
       document.body.classList.toggle("dark");
-      localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
+      localStorage.setItem("theme",document.body.classList.contains("dark")?"dark":"light");
     });
-
-    if (localStorage.getItem("theme") === "dark") {
-      document.body.classList.add("dark");
-    }
+    if(localStorage.getItem("theme")==="dark") document.body.classList.add("dark");
   </script>
 </body>
 </html>
